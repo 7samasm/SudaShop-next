@@ -25,6 +25,7 @@ const CartListWithSettingsAndPagination = ({
       {products.length > 0 && (
         <Pagination
           page={parseInt(match.params.page)}
+          page={parseInt(match.params.page) || 1}
           count={totalPages}
           color="primary"
           className="my-4"

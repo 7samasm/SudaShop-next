@@ -94,17 +94,17 @@ const CardListSettings = ({ totalResult, history, match, baseSortUrl }) => {
           <Grid item className="ml-4">
             <RadioGroup row value={order} onChange={handleOrderChange}>
               <FormControlLabel
+                value="asc"
+                disabled={!sort}
+                control={<Radio size="small" />}
+                label={<Icon path={mdiSortDescending} size={1} color="#888" />}
+              />
+              <FormControlLabel
                 value="desc"
                 disabled={!sort}
                 control={<Radio size="small" />}
                 label={<Icon path={mdiSortAscending} size={1} color="#888" />}
                 className="mr-2"
-              />
-              <FormControlLabel
-                value="asc"
-                disabled={!sort}
-                control={<Radio size="small" />}
-                label={<Icon path={mdiSortDescending} size={1} color="#888" />}
               />
             </RadioGroup>
           </Grid>
