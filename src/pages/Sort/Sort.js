@@ -1,15 +1,26 @@
-import React from "react";
+import React, { useRef } from "react";
 import CartListWithSettingsAndPagination from "../../components/containers/CardList/CartListWithSettingsAndPagination";
 import CardListSkeleton from "../../components/ui/Skeletons/CardListSkeleton";
 import usePage from "../../hooks/pagination";
 
-const IndexSort = ({ match, history }) => {
+const Sort = ({ match, history }) => {
   const {
-    params: { page, sort, order },
+    params: { page, sort, order, selector },
   } = match;
 
+  const url = useRef(null);
+
+  switch (selector) {
+    case "all":
+      url.current = `/products?sortBy=${sort}&orderBy=${order}&page=${page}`;
+      break;
+    default:
+      url.current = `/products/section/${selector}?sortBy=${sort}&orderBy=${order}&page=${page}`;
+      break;
+  }
+
   const [data, createOnPageinationChangeHandler] = usePage(
-    `/products?sortBy=${sort}&orderBy=${order}&page=${page}`,
+    url.current,
     match,
     history
   );
@@ -22,9 +33,9 @@ const IndexSort = ({ match, history }) => {
       history={history}
       match={match}
       onPaginationChange={createOnPageinationChangeHandler(
-        `/sort/${sort}/${order}`
+        `/sort/${selector}/${sort}/${order}`
       )}
-      baseSortUrl="/sort"
+      baseSortUrl={`/sort/${selector}`}
     />
   ) : (
     <CardListSkeleton />
@@ -33,4 +44,4 @@ const IndexSort = ({ match, history }) => {
   return renderPageOrSkeleton;
 };
 
-export default IndexSort;
+export default Sort;

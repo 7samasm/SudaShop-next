@@ -9,22 +9,31 @@ import CardItem from "../../ui/CardItem/CardItem";
 const CardList = ({ products, render, totalResult }) => {
   const theme = useTheme();
   const listDirection = theme.direction === "ltr" ? "row" : "row-reverse";
-  const transformedItems = products.map((item) => {
-    return (
-      <Grid item key={item._id} xs={6} sm={4} md={3} lg={2} className="mb-3">
-        <CardItem item={item} render={() => render && render(item)} />
+  const renderCardsOrAlert =
+    products.length > 0 ? (
+      products.map((item) => {
+        return (
+          <Grid
+            item
+            key={item._id}
+            xs={6}
+            sm={4}
+            md={3}
+            lg={2}
+            className="mb-3"
+          >
+            <CardItem item={item} render={() => render && render(item)} />
+          </Grid>
+        );
+      })
+    ) : (
+      <Grid item xs={12}>
+        <Alert severity="warning">no ressults to show !</Alert>
       </Grid>
     );
-  });
   return (
     <Grid container spacing={1} direction={listDirection}>
-      {transformedItems.length > 0 ? (
-        transformedItems
-      ) : (
-        <Grid item xs={12}>
-          <Alert severity="warning">no ressults to show !</Alert>
-        </Grid>
-      )}
+      {renderCardsOrAlert}
     </Grid>
   );
 };

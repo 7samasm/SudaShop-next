@@ -23,11 +23,14 @@ const CardListSettings = ({ totalResult, history, match, baseSortUrl }) => {
 
   useEffect(() => {
     const { sort, order } = match.params;
+    /**
+     * sort and order only avaliable in Sort page
+     * so we use them in check to avoid set them both with nullish values
+     */
     if (sort && order) {
       setSort(sort);
       setOrder(order);
     }
-    // console.log({ sort, order });
   }, [match]);
 
   const doFilter = (sort, order) => {
@@ -36,12 +39,10 @@ const CardListSettings = ({ totalResult, history, match, baseSortUrl }) => {
   };
   const handleOrderChange = (e) => {
     const eventValue = e.target.value;
-    // setOrder(eventValue);
     doFilter(sort, eventValue);
   };
   const handleSortChange = (e) => {
     const eventValue = e.target.value;
-    // setSort(eventValue);
     doFilter(eventValue, "asc");
   };
   return (

@@ -17,7 +17,7 @@ import ProductOverView from "../pages/ProductOverView/ProductOverView";*/
 
 const Index = lazy(() => import("../pages/Index/Index"));
 const IndexPage = lazy(() => import("../pages/Index/IndexPage"));
-const IndexSort = lazy(() => import("../pages/Index/IndexSort"));
+const Sort = lazy(() => import("../pages/Sort/Sort"));
 const Sections = lazy(() => import("../pages/Sections/Sections"));
 const AddItem = lazy(() => import("../pages/admin/add_item/AddItem"));
 const Login = lazy(() => import("../pages/admin/login/Login"));
@@ -58,12 +58,12 @@ const Routes = (props) => {
     />,
     <Route
       key={Math.random()}
-      path="/sort/:sort/:order/:page"
+      path="/sort/:selector/:sort/:order/:page"
       render={(props) => (
         <Suspense
           fallback={<LoadingSpinner open={true} renderLoader={false} />}
         >
-          <IndexSort {...props} />
+          <Sort {...props} />
         </Suspense>
       )}
     />,

@@ -16,15 +16,16 @@ const CartListWithSettingsAndPagination = ({
 }) => {
   return (
     <Grid container direction="column" alignItems="center">
-      <CardListSettings
-        totalResult={totalResult}
-        {...{ history, match }}
-        baseSortUrl={baseSortUrl}
-      />
+      {products.length > 0 && (
+        <CardListSettings
+          totalResult={totalResult}
+          {...{ history, match }}
+          baseSortUrl={baseSortUrl}
+        />
+      )}
       <CardList products={products} />
       {products.length > 0 && (
         <Pagination
-          page={parseInt(match.params.page)}
           page={parseInt(match.params.page) || 1}
           count={totalPages}
           color="primary"

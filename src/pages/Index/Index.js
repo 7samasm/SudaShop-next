@@ -18,7 +18,7 @@ const Index = ({ history, match }) => {
       history={history}
       match={match}
       onPaginationChange={createOnPageinationChangeHandler("/page")}
-      baseSortUrl="/sort"
+      baseSortUrl="/sort/all"
     />
   ) : (
     <CardListSkeleton />
