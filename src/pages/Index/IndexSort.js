@@ -1,23 +1,18 @@
-import React, { useEffect } from "react";
+import React from "react";
 import CartListWithSettingsAndPagination from "../../components/containers/CardList/CartListWithSettingsAndPagination";
 import CardListSkeleton from "../../components/ui/Skeletons/CardListSkeleton";
-import { useHttp } from "../../hooks/http";
+import usePage from "../../hooks/pagination";
 
 const IndexSort = ({ match, history }) => {
-  const { data, sendRequest } = useHttp();
+  const {
+    params: { page, sort, order },
+  } = match;
 
-  useEffect(() => {
-    const { sort, order, page } = match.params;
-    if (!Number.isInteger(+page) || +page === 0) return history.replace("/");
-    const url = `/products?sortBy=${sort}&orderBy=${order}&page=${page}`;
-    console.log(url);
-    sendRequest(url, "get");
-  }, [sendRequest, match, history]);
-
-  const handlePaginationChange = (event, page) => {
-    const { sort, order } = match.params;
-    history.push(`/sort/${sort}/${order}/${page}`);
-  };
+  const [data, createOnPageinationChangeHandler] = usePage(
+    `/products?sortBy=${sort}&orderBy=${order}&page=${page}`,
+    match,
+    history
+  );
 
   const renderPageOrSkeleton = data ? (
     <CartListWithSettingsAndPagination
@@ -26,7 +21,9 @@ const IndexSort = ({ match, history }) => {
       totalPages={data.totalPages}
       history={history}
       match={match}
-      onPaginationChange={handlePaginationChange}
+      onPaginationChange={createOnPageinationChangeHandler(
+        `/sort/${sort}/${order}`
+      )}
       baseSortUrl="/sort"
     />
   ) : (

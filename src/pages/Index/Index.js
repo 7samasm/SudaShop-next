@@ -1,31 +1,29 @@
-import React, { useEffect } from "react";
-import { Grid } from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
-import CardList from "../../components/containers/CardList/CardList";
+import React from "react";
+import CartListWithSettingsAndPagination from "../../components/containers/CardList/CartListWithSettingsAndPagination";
 import CardListSkeleton from "../../components/ui/Skeletons/CardListSkeleton";
-import { useHttp } from "../../hooks/http";
+import usePage from "../../hooks/pagination";
 
-const Index = ({ history }) => {
-  const { data, sendRequest } = useHttp();
-  useEffect(() => {
-    sendRequest("products", "get");
-  }, [sendRequest]);
-  const handlePaginationChange = (event, page) => {
-    history.push(`/page/${page}`);
-  };
+const Index = ({ history, match }) => {
+  const [data, createOnPageinationChangeHandler] = usePage(
+    `/products?page=1`,
+    match,
+    history
+  );
+
   const renderPageOrSkeleton = data ? (
-    <Grid container direction="column" alignItems="center">
-      <CardList products={data.docs} totalResult={data.totalDocs} />
-      <Pagination
-        count={data.totalPages}
-        color="primary"
-        className="my-4"
-        onChange={handlePaginationChange}
-      />
-    </Grid>
+    <CartListWithSettingsAndPagination
+      products={data.docs}
+      totalResult={data.totalDocs}
+      totalPages={data.totalPages}
+      history={history}
+      match={match}
+      onPaginationChange={createOnPageinationChangeHandler("/page")}
+      baseSortUrl="/sort"
+    />
   ) : (
     <CardListSkeleton />
   );
+
   return renderPageOrSkeleton;
 };
 
