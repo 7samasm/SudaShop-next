@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-function App() {
+import "./App.css";
+import TheHeader from "./components/ui/TheHeader/TheHeader";
+import Routes from "./routes/Routes";
+import { onClientInit } from "./store/actions";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#673ab7",
+    },
+    secondary: {
+      main: "#e91e63",
+    },
+    default: {
+      main: "#fffff",
+    },
+  },
+  direction: "ltr",
+});
+
+const App = (props) => {
+  const { onClientInit } = props;
+  useEffect(() => {
+    onClientInit();
+  }, [onClientInit]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <ThemeProvider theme={theme}>
+        <TheHeader />
+        <Routes />
+      </ThemeProvider>
+    </Router>
   );
-}
+};
 
-export default App;
+// const mapStateToProps = (state) => ({
+//   token: state.auth.token,
+// });
+
+export default connect(null, { onClientInit })(App);

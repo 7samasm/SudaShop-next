@@ -1,0 +1,6 @@
+export const SET_PRODUCTS = "SET_PRODUCTS";
+export const TOGGLE_DRAWER = "TOGGLE_DRAWER";
+export const SET_SECTIONS = "SET_SECTIONS";
+//AUTH
+export const AUTH_SUCCESS = "AUTH_SUCCESS";
+export const AUTH_LOGOUT = "AUTH_LOGOUT";
