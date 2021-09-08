@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { useTheme } from "@material-ui/styles";
-// import { fn } from "moment";
+import moment from "moment";
 
 import img from "../../../../static/d.jpg";
 
@@ -48,8 +48,7 @@ const Comment = ({
             <Grid item style={{ flexGrow: 1 }}></Grid>
             <Grid item>
               <Typography variant="caption">
-                {createdAt}
-                {/* {moment(createdAt).fromNow()} */}
+                {moment(createdAt).fromNow()}
               </Typography>
             </Grid>
           </Grid>
