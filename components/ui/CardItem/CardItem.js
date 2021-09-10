@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import Card from "@material-ui/core/Card";
 import CurrencyFormat from "react-currency-format";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -7,7 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import CardMedia from "@material-ui/core/CardMedia";
 import { makeStyles } from "@material-ui/styles";
-import img from "../../../static/d.jpg";
+import img from "../../../public/images/d.jpg";
 
 const useStyles = makeStyles({
   root: {
@@ -28,11 +28,11 @@ const CardItem = ({ item, render }) => {
   return (
     <Card elevation={5} className={classes.card}>
       {render()}
-      <Link to={`/product/${item._id}`}>
+      <Link href={`/product/${item._id}`}>
         <CardActionArea>
           <CardMedia
             className={classes.media}
-            image={String(img)}
+            image={img.src}
             title="Contemplative Reptile"
           />
           <CardContent style={{ textAlign: "center" }}>

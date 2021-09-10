@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
+import Link from "next/link";
 import { makeStyles, useTheme } from "@material-ui/styles";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
@@ -20,7 +20,7 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import { Icon } from "@mdi/react";
 import { mdiLogin, mdiLogout } from "@mdi/js";
 import { setDrawer } from "../../../store/actions";
-import avatarImg from "../../../static/react.png";
+import avatarImg from "../../../public/images/react.png";
 const useStyles = makeStyles((theme) => ({
   list: {
     width: 260,
@@ -74,7 +74,7 @@ const TemporaryDrawer = React.memo((props) => {
   ].map((listItem) => {
     if (listItem.render) {
       return (
-        <NavLink to={listItem.link} key={listItem.title}>
+        <Link href={listItem.link} key={listItem.title}>
           <ListItem button onClick={closeDrawer}>
             <ListItemIcon>{<listItem.icon />}</ListItemIcon>
             <ListItemText
@@ -85,7 +85,7 @@ const TemporaryDrawer = React.memo((props) => {
               }}
             />
           </ListItem>
-        </NavLink>
+        </Link>
       );
     } else {
       return null;
@@ -97,7 +97,7 @@ const TemporaryDrawer = React.memo((props) => {
       <List className={classes.list}>
         <ListItem>
           <ListItemAvatar>
-            <Avatar src={String(avatarImg)}></Avatar>
+            <Avatar src={avatarImg.src}></Avatar>
           </ListItemAvatar>
           <ListItemText
             primary={props.user?.name}
@@ -107,13 +107,13 @@ const TemporaryDrawer = React.memo((props) => {
             className={classes[`authBtn-${theme.direction}`]}
             onClick={closeDrawer}
           >
-            <NavLink to={isLoggedIn ? "/admin/logout" : "/auth"}>
+            <Link href={isLoggedIn ? "/admin/logout" : "/auth"}>
               <Icon
                 path={isLoggedIn ? mdiLogout : mdiLogin}
                 size={1}
                 color="#000"
               />
-            </NavLink>
+            </Link>
           </ListItemIcon>
         </ListItem>
       </List>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import Link from "next/link";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import AppBar from "@material-ui/core/AppBar";
@@ -16,10 +16,10 @@ import Add from "@material-ui/icons/Add";
 import WorkIcon from "@material-ui/icons/Work";
 import CartIcon from "@material-ui/icons/ShoppingCart";
 import MoreIcon from "@material-ui/icons/MoreVert";
-
-import "./TheHeader.css";
 import TheDrawer from "../../ui/TheDrawer/TheDrawer";
 import { setDrawer } from "../../../store/actions";
+
+// import "./TheHeader.module.css";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -163,11 +163,11 @@ const PrimarySearchAppBar = (props) => {
   ]
     .filter((item) => item.render)
     .map((item) => (
-      <NavLink to={item.link} key={item.title}>
+      <Link href={item.link} key={item.title}>
         <IconButton aria-label="show 4 new mails" color="primary">
           <item.icon />
         </IconButton>
-      </NavLink>
+      </Link>
     ));
 
   return (
