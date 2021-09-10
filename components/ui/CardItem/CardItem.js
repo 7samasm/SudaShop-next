@@ -28,7 +28,7 @@ const CardItem = ({ item, render }) => {
   return (
     <Card elevation={5} className={classes.card}>
       {render()}
-      <Link href={`/product/${item._id}`}>
+      <Link href={`/products/${item._id}`}>
         <CardActionArea>
           <CardMedia
             className={classes.media}
