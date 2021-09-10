@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import PropTypes from "prop-types";
 import { Grid, Typography } from "@material-ui/core";
 import { useTheme } from "@material-ui/styles";
@@ -15,7 +15,7 @@ const PanelList = React.memo((props) => {
   });
 
   const transformedProductList = productList.map(({ _id, title }) => (
-    <Link to={`/product/${_id}`} key={_id}>
+    <Link href={`/products/60036d0b89a8bf0f76b5f2d3`} key={_id}>
       <PanelItem title={title} />
     </Link>
   ));

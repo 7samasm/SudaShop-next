@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, Card, CardContent, Avatar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import img from "../../../../static/d.jpg";
+import img from "../../../../public/images/d.jpg";
 
 const useStyles = makeStyles({
   media: {
@@ -22,7 +22,7 @@ function PanelItem(props) {
       <CardContent>
         <Grid container alignItems="center">
           <Grid item xs={3}>
-            <Avatar src={String(img)} style={{ width: 75, height: 75 }} />
+            <Avatar src={img.src} style={{ width: 75, height: 75 }} />
             {/* <CardMedia image={String(img)} className={classes.media} /> */}
           </Grid>
           <Grid item xs={9}>

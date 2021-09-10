@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { Icon } from "@mdi/react";
 import {
   mdiSortAscending,
@@ -17,25 +18,29 @@ import {
   FormControlLabel,
 } from "@material-ui/core";
 
-const CardListSettings = ({ totalResult, history, match, baseSortUrl }) => {
+const CardListSettings = ({ totalResult, baseSortUrl }) => {
+  const router = useRouter();
   const [sort, setSort] = useState("");
   const [order, setOrder] = useState("asc");
 
   useEffect(() => {
-    const { sort, order } = match.params;
-    /**
-     * sort and order only avaliable in Sort page
-     * so we use them in check to avoid set them both with nullish values
-     */
-    if (sort && order) {
-      setSort(sort);
-      setOrder(order);
+    console.log(router);
+    if (router.route === "/sort/[...slug]") {
+      const [selector, sort, order] = router.query.slug;
+      /**
+       * sort and order only avaliable in Sort page
+       * so we use them in check to avoid set them both with nullish values
+       */
+      if (sort && order) {
+        setSort(sort);
+        setOrder(order);
+      }
     }
-  }, [match]);
+  }, [router]);
 
   const doFilter = (sort, order) => {
     const url = `${baseSortUrl}/${sort}/${order}/1`;
-    history.push(url);
+    router.push(url);
   };
   const handleOrderChange = (e) => {
     const eventValue = e.target.value;

@@ -1,5 +1,5 @@
-import React from "react";
 import PropTypes from "prop-types";
+import { useRouter } from "next/router";
 import CardListSettings from "./CardListSettings";
 import CardList from "./CardList";
 import { Pagination } from "@material-ui/lab";
@@ -9,27 +9,22 @@ const CartListWithSettingsAndPagination = ({
   products,
   totalResult,
   totalPages,
-  history,
-  match,
   onPaginationChange,
   baseSortUrl,
 }) => {
+  const router = useRouter();
   return (
     <Grid container direction="column" alignItems="center">
       {products.length > 0 && (
-        <CardListSettings
-          totalResult={totalResult}
-          {...{ history, match }}
-          baseSortUrl={baseSortUrl}
-        />
+        <CardListSettings totalResult={totalResult} baseSortUrl={baseSortUrl} />
       )}
       <CardList products={products} />
       {products.length > 0 && (
         <Pagination
-          page={parseInt(match.params.page) || 1}
+          page={parseInt(router.query.page) || 1}
           count={totalPages}
           color="primary"
-          className="my-4"
+          style={{ margin: "25px 0" }}
           onChange={onPaginationChange}
         />
       )}
@@ -41,8 +36,6 @@ CartListWithSettingsAndPagination.prototype = {
   products: PropTypes.array.isRequired,
   totalResult: PropTypes.number.isRequired,
   totalPages: PropTypes.number.isRequired,
-  history: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
   onPaginationChange: PropTypes.func.isRequired,
   baseSortUrl: PropTypes.string.isRequired,
 };

@@ -12,7 +12,7 @@ import { Delete } from "@material-ui/icons";
 import { useTheme } from "@material-ui/styles";
 import moment from "moment";
 
-import img from "../../../../static/d.jpg";
+import img from "../../../../public/images/d.jpg";
 
 const Comment = ({
   comment,
@@ -37,7 +37,7 @@ const Comment = ({
             direction={commentDirection}
           >
             <Grid item>
-              <Avatar src={String(img)}></Avatar>
+              <Avatar src={img.src}></Avatar>
             </Grid>
             <Grid item className="mx-2">
               <Typography variant="caption" component="span">
