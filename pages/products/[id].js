@@ -42,10 +42,8 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-export default function ProductOverView({ data }) {
+export default function ProductOverView({ postState }) {
   const classes = useStyles();
-
-  const [postState, setPostState] = useState(data);
   const [dialogValue, setDialogValue] = useState(false);
 
   const InfoOnChips = () => {
@@ -165,7 +163,7 @@ export async function getServerSideProps({ params }) {
 
   return {
     props: {
-      data,
+      postState: data,
     },
   };
 }

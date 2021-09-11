@@ -1,13 +1,9 @@
 import { Provider } from "react-redux";
-import TheHeader from "../ui/TheHeader/TheHeader";
 import store from "../../store";
-import {
-  createTheme,
-  ThemeProvider,
-  ServerStyleSheets,
-  StylesProvider,
-} from "@material-ui/core/styles";
-import { Container } from "@material-ui/core";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import TheHeader from "../ui/TheHeader/TheHeader";
+import { Container, CssBaseline } from "@material-ui/core";
+import { useEffect } from "react";
 
 const theme = createTheme({
   palette: {
@@ -25,18 +21,21 @@ const theme = createTheme({
 });
 
 export default function DefaultLayout(props) {
-  const sheet = new ServerStyleSheets();
+  useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector("#jss-server-side");
+    if (jssStyles) {
+      jssStyles.parentElement.removeChild(jssStyles);
+    }
+  }, []);
+
   return (
     <Provider store={store}>
-      {sheet.collect(
-        <>
-          <ThemeProvider theme={theme}>
-            <TheHeader></TheHeader>
-            <Container>{props.children}</Container>
-          </ThemeProvider>
-        </>
-      )}
-      {console.log("sheet ===> ", sheet.toString())}
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <TheHeader></TheHeader>
+        <Container>{props.children}</Container>
+      </ThemeProvider>
     </Provider>
   );
 }

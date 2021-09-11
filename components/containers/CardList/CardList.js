@@ -20,7 +20,7 @@ const CardList = ({ products, render, totalResult }) => {
             sm={4}
             md={3}
             lg={2}
-            className="mb-3"
+            style={{ marginBottom: "14px" }}
           >
             <CardItem item={item} render={() => render && render(item)} />
           </Grid>

@@ -17,12 +17,21 @@ import {
   Radio,
   FormControlLabel,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
+
+const useStyles = makeStyles((theme) => {
+  return {
+    "mb-2": {
+      marginBottom: theme.spacing(2),
+    },
+  };
+});
 
 const CardListSettings = ({ totalResult, baseSortUrl }) => {
   const router = useRouter();
   const [sort, setSort] = useState("");
   const [order, setOrder] = useState("asc");
-
+  const classes = useStyles();
   useEffect(() => {
     console.log(router);
     if (router.route === "/sort/[...slug]") {
@@ -51,7 +60,7 @@ const CardListSettings = ({ totalResult, baseSortUrl }) => {
     doFilter(eventValue, "asc");
   };
   return (
-    <Grid container className="mb-4" alignItems="baseline">
+    <Grid container alignItems="baseline" className={classes["mb-2"]}>
       <Grid item>
         <Grid container>
           <Grid item>

@@ -142,7 +142,7 @@ const TemporaryDrawer = React.memo((props) => {
       <Collapse in={isCollapseOpen}>
         <List>
           {props.sections.map((section) => (
-            <NavLink to={`/sections/${section.name}/1`} key={section._id}>
+            <Link href={`/sections/${section.name}/1`} key={section._id}>
               <ListItem
                 button
                 onClick={closeDrawer}
@@ -152,7 +152,7 @@ const TemporaryDrawer = React.memo((props) => {
                   {section.name}
                 </ListItemText>
               </ListItem>
-            </NavLink>
+            </Link>
           ))}
         </List>
       </Collapse>

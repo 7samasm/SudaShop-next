@@ -4,6 +4,15 @@ import CardListSettings from "./CardListSettings";
 import CardList from "./CardList";
 import { Pagination } from "@material-ui/lab";
 import { Grid } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
+
+const useStyles = makeStyles((theme) => {
+  return {
+    "my-4": {
+      margin: theme.spacing(4),
+    },
+  };
+});
 
 const CartListWithSettingsAndPagination = ({
   products,
@@ -12,6 +21,7 @@ const CartListWithSettingsAndPagination = ({
   onPaginationChange,
   baseSortUrl,
 }) => {
+  const classes = useStyles();
   const router = useRouter();
   return (
     <Grid container direction="column" alignItems="center">
@@ -24,7 +34,7 @@ const CartListWithSettingsAndPagination = ({
           page={parseInt(router.query.page) || 1}
           count={totalPages}
           color="primary"
-          style={{ margin: "25px 0" }}
+          className={classes["my-4"]}
           onChange={onPaginationChange}
         />
       )}

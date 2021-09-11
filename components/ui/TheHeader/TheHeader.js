@@ -201,7 +201,7 @@ const PrimarySearchAppBar = (props) => {
           <div className={classes.sectionDesktop}>
             {navList}
             {isLoggedIn && (
-              <NavLink to="/admin/cart">
+              <Link href="/admin/cart">
                 <IconButton
                   aria-label="show 17 new notifications"
                   color="primary"
@@ -210,7 +210,7 @@ const PrimarySearchAppBar = (props) => {
                     <CartIcon />
                   </Badge>
                 </IconButton>
-              </NavLink>
+              </Link>
             )}
           </div>
           <div className={classes.sectionMobile}>
