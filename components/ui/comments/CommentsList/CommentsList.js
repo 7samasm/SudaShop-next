@@ -1,18 +1,31 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Grid, Typography, Box } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { CommentOutlined, AddCommentOutlined } from "@material-ui/icons";
-import { useTheme } from "@material-ui/styles";
+import { useTheme, makeStyles } from "@material-ui/styles";
 
 import { useHttp } from "../../../../hooks/http";
 import Comment from "../Comment/Comment";
 import AddComment from "../AddComment/AddComment";
 import LoadingSpinner from "../../LoadingSpinner/LoadingSpinner";
 
+const useStyles = makeStyles((theme) => {
+  return {
+    "mx-1": {
+      margin: `0 ${theme.spacing(1)}px`,
+    },
+    "my-4": {
+      margin: `${theme.spacing(4)}px 0`,
+    },
+  };
+});
+
 const CommentsList = (props) => {
   const { comments, token, productId, isLoggedIn, status } = props;
-  const [extendedComments, setExtendedComments] = useState([]);
+  const [extendedComments, setExtendedComments] = useState(comments);
+
+  const classes = useStyles();
 
   const theme = useTheme();
   const { loading, data, reqIdentifier, reqExtra, sendRequest } = useHttp();
@@ -81,46 +94,36 @@ const CommentsList = (props) => {
   return (
     <Grid container direction="column">
       <LoadingSpinner open={loading} renderLoader={true} />
-      <Box
-        display="flex"
-        className="my-4"
-        color="#666"
-        flexDirection={titleWithIconDirection}
-      >
+      <Grid container className={classes["my-4"]}>
         <CommentOutlined color="inherit" />
         <Typography
           variant="body1"
           component="p"
-          className="mx-1"
           color="inherit"
+          className={classes["mx-1"]}
         >
           comments
         </Typography>
         <span>:</span>
-      </Box>
+      </Grid>
       {renderCommentsOrNoCommentsAlert}
-      {isLoggedIn && (
-        <Fragment>
-          <Box
-            display="flex"
-            className="my-4"
-            color="#666"
-            flexDirection={titleWithIconDirection}
+      {/* {isLoggedIn && ( */}
+      <>
+        <Grid container className={classes["my-4"]}>
+          <AddCommentOutlined color="inherit" />
+          <Typography
+            variant="body1"
+            component="p"
+            color="inherit"
+            className={classes["mx-1"]}
           >
-            <AddCommentOutlined color="inherit" />
-            <Typography
-              variant="body1"
-              component="p"
-              className="mx-1"
-              color="inherit"
-            >
-              add Comment
-            </Typography>
-            <span>:</span>
-          </Box>
-          <AddComment onCommentAdded={addComment} />
-        </Fragment>
-      )}
+            add Comment
+          </Typography>
+          <span>:</span>
+        </Grid>
+        <AddComment onCommentAdded={addComment} />
+      </>
+      {/* )} */}
     </Grid>
   );
 };

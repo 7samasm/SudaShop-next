@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
   card: {
     borderRadius: "24px",
-    padding: "10px 0",
+    // padding: "10px 0",
   },
 });
 const CardItem = ({ item, render }) => {
@@ -29,7 +29,7 @@ const CardItem = ({ item, render }) => {
     <Card elevation={5} className={classes.card}>
       {render()}
       <Link href={`/products/${item._id}`}>
-        <CardActionArea>
+        <CardActionArea style={{ padding: "10px 0" }}>
           <CardMedia
             className={classes.media}
             image={img.src}

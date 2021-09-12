@@ -8,8 +8,8 @@ import { makeStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles((theme) => {
   return {
-    "my-4": {
-      margin: theme.spacing(4),
+    "my-2": {
+      margin: theme.spacing(2),
     },
   };
 });
@@ -34,7 +34,7 @@ const CartListWithSettingsAndPagination = ({
           page={parseInt(router.query.page) || 1}
           count={totalPages}
           color="primary"
-          className={classes["my-4"]}
+          className={classes["my-2"]}
           onChange={onPaginationChange}
         />
       )}

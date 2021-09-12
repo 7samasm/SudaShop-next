@@ -5,14 +5,24 @@ import {
   Card,
   CardContent,
   Avatar,
-  Box,
   IconButton,
 } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
-import { useTheme } from "@material-ui/styles";
+import { useTheme, makeStyles } from "@material-ui/styles";
 import moment from "moment";
 
 import img from "../../../../public/images/d.jpg";
+
+const useStyles = makeStyles((theme) => {
+  return {
+    "mx-2": {
+      margin: `0 ${theme.spacing(2)}px`,
+    },
+    "mb-3": {
+      marginBottom: theme.spacing(3),
+    },
+  };
+});
 
 const Comment = ({
   comment,
@@ -21,25 +31,30 @@ const Comment = ({
   showDeleteIcon,
   onCommentDeleted,
 }) => {
+  const classes = useStyles();
   const theme = useTheme();
   const commentDirection = theme.direction === "ltr" ? "row" : "row-reverse";
   const commentAlignment = theme.direction === "ltr" ? "left" : "right";
   const btnAlignment = theme.direction === "ltr" ? "flex-end" : "flex-start";
   return (
     <Grid item>
-      <Card className="mb-3" elevation={4} style={{ borderRadius: 15 }}>
+      <Card
+        className={classes["mb-3"]}
+        elevation={4}
+        style={{ borderRadius: 15 }}
+      >
         <CardContent>
           {/* header  */}
           <Grid
             container
             alignItems="center"
-            className="mb-3"
+            className={classes["mb-3"]}
             direction={commentDirection}
           >
             <Grid item>
               <Avatar src={img.src}></Avatar>
             </Grid>
-            <Grid item className="mx-2">
+            <Grid item className={classes["mx-2"]}>
               <Typography variant="caption" component="span">
                 {createdBy}
               </Typography>
@@ -54,20 +69,20 @@ const Comment = ({
           </Grid>
           {/* header  */}
           {/* comment and del icon */}
-          <Box display="flex" flexDirection="column">
+          <Grid container direction="column">
             <Typography variant="body2" align={commentAlignment}>
               {comment}
             </Typography>
             {/* <div style={{ flexGrow: 1 }}></div> */}
-            {showDeleteIcon && (
-              <IconButton
-                style={{ alignSelf: btnAlignment, color: "red" }}
-                onClick={onCommentDeleted}
-              >
-                <Delete />
-              </IconButton>
-            )}
-          </Box>
+            {/* {showDeleteIcon && ( */}
+            <IconButton
+              style={{ alignSelf: btnAlignment, color: "red" }}
+              onClick={onCommentDeleted}
+            >
+              <Delete />
+            </IconButton>
+            {/* )} */}
+          </Grid>
           {/* comment and del icon */}
         </CardContent>
       </Card>

@@ -1,12 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import { Grid } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { useTheme } from "@material-ui/styles";
 
 import CardItem from "../../ui/CardItem/CardItem";
-const CardList = ({ products, render, totalResult }) => {
+const CardList = ({ products, render }) => {
   const theme = useTheme();
   const listDirection = theme.direction === "ltr" ? "row" : "row-reverse";
   const renderCardsOrAlert =
@@ -42,9 +41,4 @@ CardList.propTypes = {
   products: PropTypes.array.isRequired,
 };
 
-const mapStatesToProps = (state) => ({
-  // products: state.prod.products,
-  isLoggedIn: state.auth.token !== null,
-});
-
-export default connect(mapStatesToProps)(CardList);
+export default CardList;

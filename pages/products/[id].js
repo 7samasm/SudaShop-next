@@ -7,7 +7,7 @@ import {
   Button,
   Chip,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import {
   Category,
   LocationCity,
@@ -31,6 +31,19 @@ const useStyles = makeStyles((theme) => {
       backgroundSize: "contain !important",
       backgroundPosition: "center center",
     },
+    "my-1": {
+      margin: `${theme.spacing(1)}px 0`,
+    },
+    "my-4": {
+      margin: `${theme.spacing(4)}px 0`,
+    },
+    "mb-5": {
+      marginBottom: theme.spacing(5),
+    },
+    "py-3": { padding: `${theme.spacing(3)}px 0` },
+    "align-self-center": {
+      alignSelf: "center",
+    },
     paddingCol: {
       padding: "0 12PX",
     },
@@ -48,12 +61,12 @@ export default function ProductOverView({ postState }) {
 
   const InfoOnChips = () => {
     const mapDataOnChips = [
-      { name: `${postState?.price} SDG`, icon: Money },
-      { name: postState?.userId.name, icon: Person },
+      { name: `${postState.price} SDG`, icon: Money },
+      { name: postState.userId.name, icon: Person },
       { name: "khartoum", icon: LocationCity },
       { name: postState?.section, icon: Category },
     ].map((el) => (
-      <Grid item xs={6} lg={3} className="my-1" key={Math.random()}>
+      <Grid item xs={6} lg={3} className={classes["my-1"]} key={Math.random()}>
         <Grid container justifyContent="center">
           <Chip
             key={el.name}
@@ -92,26 +105,31 @@ export default function ProductOverView({ postState }) {
           <PanelList
             title="see also"
             productList={[
-              { _id: "vcvcv", title: "test" },
-              { _id: "cksjd", title: "test1" },
-              { _id: "sjdhh", title: "test2" },
+              { _id: "1", title: "test" },
+              { _id: "2", title: "test1" },
+              { _id: "3", title: "test2" },
             ]}
           />
           <PanelList
             title="most comments"
             productList={[
-              { _id: "vcvcv1", title: "test" },
-              { _id: "cksjd2", title: "test1" },
-              { _id: "sjdhh3", title: "test2" },
+              { _id: "1", title: "test" },
+              { _id: "2", title: "test1" },
+              { _id: "3", title: "test2" },
             ]}
           />
         </Grid>
         {/* side panels end */}
         {/* post-comment  start */}
-        <Grid item xs={12} md={7} className={classes.paddingCol + " mb-5"}>
+        <Grid
+          item
+          xs={12}
+          md={7}
+          className={classes.paddingCol + " " + classes["mb-5"]}
+        >
           <Card
             elevation={3}
-            className="py-3"
+            className={classes["py-3"]}
             id="dialog-container"
             style={{ position: "relative" }}
           >
@@ -127,13 +145,13 @@ export default function ProductOverView({ postState }) {
               <Grid item>{InfoOnChips()}</Grid>
               <Grid item>
                 <CardContent>
-                  <Typography className="my-4">
+                  <Typography className={classes["my-4"]}>
                     {postState?.description}
                   </Typography>
                 </CardContent>
               </Grid>
               {true && (
-                <Grid item className="align-self-center">
+                <Grid item className={classes["align-self-center"]}>
                   <Button
                     color="secondary"
                     startIcon={<AddShoppingCart />}
@@ -145,12 +163,10 @@ export default function ProductOverView({ postState }) {
               )}
             </Grid>
           </Card>
-          {postState && (
-            <CommentsList
-              comments={postState.comments}
-              productId={postState.id}
-            />
-          )}
+          <CommentsList
+            comments={postState.comments}
+            productId={postState.id}
+          />
         </Grid>
         {/* post-comment  end */}
       </Grid>
