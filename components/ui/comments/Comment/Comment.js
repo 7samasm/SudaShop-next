@@ -74,14 +74,14 @@ const Comment = ({
               {comment}
             </Typography>
             {/* <div style={{ flexGrow: 1 }}></div> */}
-            {/* {showDeleteIcon && ( */}
-            <IconButton
-              style={{ alignSelf: btnAlignment, color: "red" }}
-              onClick={onCommentDeleted}
-            >
-              <Delete />
-            </IconButton>
-            {/* )} */}
+            {showDeleteIcon && (
+              <IconButton
+                style={{ alignSelf: btnAlignment, color: "red" }}
+                onClick={onCommentDeleted}
+              >
+                <Delete />
+              </IconButton>
+            )}
           </Grid>
           {/* comment and del icon */}
         </CardContent>

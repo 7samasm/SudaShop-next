@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import { makeStyles, useTheme } from "@material-ui/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -19,8 +18,10 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import { Icon } from "@mdi/react";
 import { mdiLogin, mdiLogout } from "@mdi/js";
-import { setDrawer } from "../../../store/actions";
 import avatarImg from "../../../public/images/react.png";
+import drawerCtx from "../../../ctxStore/drawer_ctx";
+import sectionsCtx from "../../../ctxStore/sections_ctx";
+import authCtx from "../../../ctxStore/auth_ctx";
 const useStyles = makeStyles((theme) => ({
   list: {
     width: 260,
@@ -40,17 +41,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TemporaryDrawer = React.memo((props) => {
-  const { isLoggedIn } = props;
+const TemporaryDrawer = React.memo(() => {
   const [isCollapseOpen, setIsCollapseOpen] = useState(true);
   const classes = useStyles();
   const theme = useTheme();
+
+  const drawerContext = useContext(drawerCtx);
+  const sectionsContext = useContext(sectionsCtx);
+  const { isLoggedIn, user } = useContext(authCtx);
 
   useEffect(() => {
     console.log("%c [TheDrawer] 1st useEffect", "color:teal;font-size:20px");
   });
 
-  const closeDrawer = () => props.setDrawer(false);
+  const closeDrawer = () => drawerContext.closeDrawer();
 
   const listTile = [
     {
@@ -63,13 +67,13 @@ const TemporaryDrawer = React.memo((props) => {
       title: "add product",
       icon: AddIcon,
       link: "/admin/add-product",
-      render: props.isLoggedIn,
+      render: isLoggedIn,
     },
     {
       title: "My Products",
       icon: WorkIcon,
       link: "/admin/my-products",
-      render: props.isLoggedIn,
+      render: isLoggedIn,
     },
   ].map((listItem) => {
     if (listItem.render) {
@@ -93,21 +97,22 @@ const TemporaryDrawer = React.memo((props) => {
   });
 
   return (
-    <Drawer dir={theme.direction} open={props.drawer} onClose={closeDrawer}>
+    <Drawer
+      dir={theme.direction}
+      open={drawerContext.drawerIsOpen}
+      onClose={closeDrawer}
+    >
       <List className={classes.list}>
         <ListItem>
           <ListItemAvatar>
             <Avatar src={avatarImg.src}></Avatar>
           </ListItemAvatar>
-          <ListItemText
-            primary={props.user?.name}
-            secondary={props.user?.email}
-          />
+          <ListItemText primary={user?.name} secondary={user?.email} />
           <ListItemIcon
             className={classes[`authBtn-${theme.direction}`]}
             onClick={closeDrawer}
           >
-            <Link href={isLoggedIn ? "/admin/logout" : "/auth"}>
+            <Link href={isLoggedIn ? "/auth/logout" : "/auth"}>
               <Icon
                 path={isLoggedIn ? mdiLogout : mdiLogin}
                 size={1}
@@ -141,7 +146,7 @@ const TemporaryDrawer = React.memo((props) => {
       </List>
       <Collapse in={isCollapseOpen}>
         <List>
-          {props.sections.map((section) => (
+          {sectionsContext.sections.map((section) => (
             <Link href={`/sections/${section.name}/1`} key={section._id}>
               <ListItem
                 button
@@ -160,11 +165,4 @@ const TemporaryDrawer = React.memo((props) => {
   );
 });
 
-const mapStateToProps = (state) => ({
-  drawer: state.config.drawer,
-  isLoggedIn: state.auth.token !== null,
-  user: state.auth.user,
-  sections: state.config.sections,
-});
-
-export default connect(mapStateToProps, { setDrawer })(TemporaryDrawer);
+export default TemporaryDrawer;

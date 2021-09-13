@@ -1,9 +1,10 @@
-import { Provider } from "react-redux";
-import store from "../../store";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import TheHeader from "../ui/TheHeader/TheHeader";
 import { Container, CssBaseline } from "@material-ui/core";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { DrawerProvider } from "../../ctxStore/drawer_ctx";
+import sectionsCtx from "../../ctxStore/sections_ctx";
+import authCtx from "../../ctxStore/auth_ctx";
 
 const theme = createTheme({
   palette: {
@@ -21,21 +22,34 @@ const theme = createTheme({
 });
 
 export default function DefaultLayout(props) {
+  const sectionsContext = useContext(sectionsCtx);
+  const authContext = useContext(authCtx);
+
+  async function onLayoutInit() {
+    await sectionsContext.loadSections();
+    await authContext.refreshToken();
+  }
+
   useEffect(() => {
-    // Remove the server-side injected CSS.
-    const jssStyles = document.querySelector("#jss-server-side");
-    if (jssStyles) {
-      jssStyles.parentElement.removeChild(jssStyles);
-    }
+    onLayoutInit()
+      .then(() => {
+        const jssStyles = document.querySelector("#jss-server-side");
+        if (jssStyles) {
+          jssStyles.parentElement.removeChild(jssStyles);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }, []);
 
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <TheHeader></TheHeader>
-        <Container>{props.children}</Container>
-      </ThemeProvider>
-    </Provider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <DrawerProvider>
+        <TheHeader />
+      </DrawerProvider>
+      <Container>{props.children}</Container>
+    </ThemeProvider>
   );
 }

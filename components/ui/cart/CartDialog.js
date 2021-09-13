@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   Card,
   CardContent,
@@ -15,21 +14,18 @@ import {
 import { useTheme } from "@material-ui/styles";
 import { Settings, CheckCircleOutline, Category } from "@material-ui/icons";
 
-import { useHttp } from "../../hooks/http";
-import { setCart } from "../../store/actions";
+import authCtx from "../../../ctxStore/auth_ctx";
+import cartCtx from "../../../ctxStore/cart_ctx";
+import { useHttp } from "../../../hooks/http";
 
-const CartDialog = ({
-  dialogValue,
-  onShadowClick,
-  style,
-  productId,
-  token,
-  setCart,
-}) => {
+const CartDialog = ({ dialogValue, onShadowClick, style, productId }) => {
   const [inputIconColor, setInputIconColor] = useState("inherit");
   const theme = useTheme();
   const quantityInput = useRef("");
   const { data, sendRequest } = useHttp();
+  const { token } = useContext(authCtx);
+  const { setCart } = useContext(cartCtx);
+
   useEffect(() => {
     if (data) {
       console.log(data);
@@ -129,10 +125,4 @@ const CartDialog = ({
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    token: state.auth.token,
-  };
-};
-
-export default connect(mapStateToProps, { setCart })(CartDialog);
+export default CartDialog;

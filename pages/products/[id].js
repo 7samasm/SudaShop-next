@@ -16,13 +16,14 @@ import {
   AddShoppingCart,
 } from "@material-ui/icons";
 import Head from "next/head";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Axios from "../../axios";
 
 import CommentsList from "../../components/ui/comments/CommentsList/CommentsList";
 import PanelList from "../../components/ui/side_panel/PanelList/PanelList";
-import CartDialog from "../../pages__/ProductOverView/CartDialog";
+import CartDialog from "../../components/ui/cart/CartDialog";
 import img from "../../public/images/d.jpg";
+import authCtx from "../../ctxStore/auth_ctx";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => {
 export default function ProductOverView({ postState }) {
   const classes = useStyles();
   const [dialogValue, setDialogValue] = useState(false);
-
+  const { isLoggedIn, userId } = useContext(authCtx);
   const InfoOnChips = () => {
     const mapDataOnChips = [
       { name: `${postState.price} SDG`, icon: Money },
@@ -136,7 +137,7 @@ export default function ProductOverView({ postState }) {
             <CartDialog
               dialogValue={dialogValue}
               onShadowClick={toggleDialogValue}
-              productId={postState.id}
+              productId={postState._id}
             />
             <Grid container direction="column">
               <Grid item className="mb-2">
@@ -150,7 +151,7 @@ export default function ProductOverView({ postState }) {
                   </Typography>
                 </CardContent>
               </Grid>
-              {true && (
+              {isLoggedIn && userId !== postState.userId._id && (
                 <Grid item className={classes["align-self-center"]}>
                   <Button
                     color="secondary"
@@ -165,7 +166,7 @@ export default function ProductOverView({ postState }) {
           </Card>
           <CommentsList
             comments={postState.comments}
-            productId={postState.id}
+            productId={postState._id}
           />
         </Grid>
         {/* post-comment  end */}

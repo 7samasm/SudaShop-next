@@ -12,7 +12,7 @@ import {
   ListItemIcon,
 } from "@material-ui/core";
 
-import img from "../../../static/d.jpg";
+import img from "../../../public/images/d.jpg";
 
 const CartItem = ({ price, quantity, title, onDeleteCartItem }) => {
   return (
@@ -20,7 +20,7 @@ const CartItem = ({ price, quantity, title, onDeleteCartItem }) => {
       <List disablePadding>
         <ListItem>
           <ListItemAvatar>
-            <Avatar src={String(img)}></Avatar>
+            <Avatar src={img.src}></Avatar>
           </ListItemAvatar>
           <ListItemText secondary={`${price} SDG x ${quantity} pcs`}>
             {title}

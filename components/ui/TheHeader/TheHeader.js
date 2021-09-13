@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { connect } from "react-redux";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -17,8 +16,9 @@ import WorkIcon from "@material-ui/icons/Work";
 import CartIcon from "@material-ui/icons/ShoppingCart";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import TheDrawer from "../../ui/TheDrawer/TheDrawer";
-import { setDrawer } from "../../../store/actions";
-
+import drawerCtx from "../../../ctxStore/drawer_ctx";
+import authCtx from "../../../ctxStore/auth_ctx";
+import cartCtx from "../../../ctxStore/cart_ctx";
 // import "./TheHeader.module.css";
 
 const useStyles = makeStyles((theme) => {
@@ -52,10 +52,13 @@ const useStyles = makeStyles((theme) => {
     },
   };
 });
-const PrimarySearchAppBar = (props) => {
-  const { totalCartItems, isLoggedIn } = props;
+const PrimarySearchAppBar = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const { isLoggedIn } = useContext(authCtx);
+  const { totalItems } = useContext(cartCtx);
+  const { openDrawer } = useContext(drawerCtx);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
@@ -185,7 +188,7 @@ const PrimarySearchAppBar = (props) => {
             className={classes[`menuButton-${theme.direction}`]}
             color="primary"
             aria-label="open drawer"
-            onClick={() => props.setDrawer(true)}
+            onClick={() => openDrawer()}
           >
             <MenuIcon />
           </IconButton>
@@ -206,7 +209,7 @@ const PrimarySearchAppBar = (props) => {
                   aria-label="show 17 new notifications"
                   color="primary"
                 >
-                  <Badge badgeContent={totalCartItems} color="secondary">
+                  <Badge badgeContent={totalItems} color="secondary">
                     <CartIcon />
                   </Badge>
                 </IconButton>
@@ -232,9 +235,4 @@ const PrimarySearchAppBar = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  isLoggedIn: state.auth.token !== null,
-  totalCartItems: state.cart.totalItems,
-});
-
-export default connect(mapStateToProps, { setDrawer })(PrimarySearchAppBar);
+export default PrimarySearchAppBar;

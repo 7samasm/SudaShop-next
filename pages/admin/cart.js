@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import React, { useContext, useEffect } from "react";
+import Link from "next/link";
 import {
   Grid,
   Card,
@@ -13,23 +12,26 @@ import {
 import { ClearAll, Functions } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 
-import CartItem from "./CartItem";
-import LoadingSpinner from "../../../components/ui/LoadingSpinner/LoadingSpinner";
-import { useHttp } from "../../../hooks/http";
-import { setCart } from "../../../store/actions";
+import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner";
+import { useHttp } from "../../hooks/http";
+import CartItem from "../../components/ui/cart/CartItem";
+import cartCtx from "../../ctxStore/cart_ctx";
+import authCtx from "../../ctxStore/auth_ctx";
 
-const Cart = ({ cartItems, totalPrice, totalCartItems, setCart, token }) => {
+const Cart = () => {
   const { data, sendRequest, reqExtra, loading } = useHttp();
+  const { totalPrice, totalItems, setCart, products } = useContext(cartCtx);
+  const { token } = useContext(authCtx);
   useEffect(() => {
     // console.log(data);
     if (data) {
-      const filteredCartItems = cartItems.filter(
+      const filteredCartItems = products.filter(
         (cartItem) => cartItem._id !== reqExtra
       );
-      const currItems = cartItems.find((cartItem) => cartItem._id === reqExtra);
+      const currItems = products.find((cartItem) => cartItem._id === reqExtra);
       // console.log(`%c ${currItems}`, "color:teal;font-size:18px;");
       if (currItems) {
-        const totalItems = totalCartItems - currItems.quantity;
+        const totalItems = totalItems - currItems.quantity;
         const calcTotalPrice =
           totalPrice - currItems.quantity * currItems.price;
         setCart({
@@ -39,7 +41,7 @@ const Cart = ({ cartItems, totalPrice, totalCartItems, setCart, token }) => {
         });
       }
     }
-  }, [data, reqExtra, setCart, cartItems, totalCartItems, totalPrice]);
+  }, [data, reqExtra, setCart, products, totalItems, totalPrice]);
 
   const deleteCartItem = (productId) => {
     sendRequest(
@@ -51,10 +53,10 @@ const Cart = ({ cartItems, totalPrice, totalCartItems, setCart, token }) => {
       token
     );
   };
-  const transformedCartItems = cartItems.map(
+  const transformedCartItems = products.map(
     ({ _id, title, price, quantity }) => (
       <Grid item key={_id}>
-        <Link to={`/product/${_id}`}>
+        <Link href={`/product/${_id}`}>
           <CartItem
             title={title}
             price={price}
@@ -66,7 +68,7 @@ const Cart = ({ cartItems, totalPrice, totalCartItems, setCart, token }) => {
     )
   );
   const renderCartOrAlert =
-    totalCartItems > 0 ? (
+    totalItems > 0 ? (
       <>
         <LoadingSpinner open={loading} renderLoader />
         <Grid item>
@@ -106,12 +108,4 @@ const Cart = ({ cartItems, totalPrice, totalCartItems, setCart, token }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  token: state.auth.token,
-  isLoggedIn: state.auth.token !== null,
-  cartItems: state.cart.products,
-  totalCartItems: state.cart.totalItems,
-  totalPrice: state.cart.totalPrice,
-});
-
-export default connect(mapStateToProps, { setCart })(Cart);
+export default Cart;

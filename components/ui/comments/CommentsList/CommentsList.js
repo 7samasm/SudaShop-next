@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import React, { useContext, useEffect, useState } from "react";
 import { Grid, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { CommentOutlined, AddCommentOutlined } from "@material-ui/icons";
@@ -9,6 +8,7 @@ import { useHttp } from "../../../../hooks/http";
 import Comment from "../Comment/Comment";
 import AddComment from "../AddComment/AddComment";
 import LoadingSpinner from "../../LoadingSpinner/LoadingSpinner";
+import authCtx from "../../../../ctxStore/auth_ctx";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -21,12 +21,11 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const CommentsList = (props) => {
-  const { comments, token, productId, isLoggedIn, status } = props;
+const CommentsList = ({ comments, productId }) => {
   const [extendedComments, setExtendedComments] = useState(comments);
 
   const classes = useStyles();
-
+  const { user, token, isLoggedIn } = useContext(authCtx);
   const theme = useTheme();
   const { loading, data, reqIdentifier, reqExtra, sendRequest } = useHttp();
   const titleWithIconDirection =
@@ -83,7 +82,7 @@ const CommentsList = (props) => {
           comment={comment.commentText}
           createdBy={comment.userId.name}
           createdAt={comment.createdAt}
-          showDeleteIcon={status === "ADMIN"}
+          showDeleteIcon={user?.status === "ADMIN"}
           onCommentDeleted={() => deleteComment(comment._id)}
         />
       ))
@@ -107,31 +106,25 @@ const CommentsList = (props) => {
         <span>:</span>
       </Grid>
       {renderCommentsOrNoCommentsAlert}
-      {/* {isLoggedIn && ( */}
-      <>
-        <Grid container className={classes["my-4"]}>
-          <AddCommentOutlined color="inherit" />
-          <Typography
-            variant="body1"
-            component="p"
-            color="inherit"
-            className={classes["mx-1"]}
-          >
-            add Comment
-          </Typography>
-          <span>:</span>
-        </Grid>
-        <AddComment onCommentAdded={addComment} />
-      </>
-      {/* )} */}
+      {isLoggedIn && (
+        <>
+          <Grid container className={classes["my-4"]}>
+            <AddCommentOutlined color="inherit" />
+            <Typography
+              variant="body1"
+              component="p"
+              color="inherit"
+              className={classes["mx-1"]}
+            >
+              add Comment
+            </Typography>
+            <span>:</span>
+          </Grid>
+          <AddComment onCommentAdded={addComment} />
+        </>
+      )}
     </Grid>
   );
 };
 
-const mapStateToProps = (state) => ({
-  token: state.auth.token,
-  isLoggedIn: state.auth.token !== null,
-  status: state.auth.user?.status,
-});
-
-export default connect(mapStateToProps)(CommentsList);
+export default CommentsList;

@@ -1,12 +1,12 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
-import ProductForm from "../../../components/ui/ProductForm/ProductForm";
+import ProductForm from "../../components/ui/ProductForm/ProductForm";
 
-const EditProduct = (props) => {
+const EditProduct = () => {
   return (
     <Grid container justifyContent="center">
       <Grid item lg={6}>
-        <ProductForm history={props.history} editable={true} />
+        <ProductForm editable={true} />
       </Grid>
     </Grid>
   );

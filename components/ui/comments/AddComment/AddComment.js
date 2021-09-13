@@ -27,8 +27,8 @@ const AddComment = ({ onCommentAdded }) => {
   }, []);
 
   const add = () => {
-    setCommentText("");
     onCommentAdded(commentText);
+    setCommentText("");
   };
 
   return (

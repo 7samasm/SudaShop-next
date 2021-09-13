@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Grid } from "@material-ui/core";
-import ProductForm from "../../../components/ui/ProductForm/ProductForm";
+import ProductForm from "../../components/ui/ProductForm/ProductForm";
 
 export default class AddItem extends Component {
   componentDidMount() {

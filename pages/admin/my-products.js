@@ -1,21 +1,23 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect, Fragment, useContext } from "react";
 import { CardActions, IconButton } from "@material-ui/core";
 import { Delete, Edit } from "@material-ui/icons";
+import { useRouter } from "next/router";
 
-import { useHttp } from "../../../hooks/http";
-import CardList from "../../../components/containers/CardList/CardList";
-import CardListSkeleton from "../../../components/ui/Skeletons/CardListSkeleton";
-import LoadingSpinner from "../../../components/ui/LoadingSpinner/LoadingSpinner";
-import CustomDialog from "../../../components/ui/CustomDialog/CustomDialog";
+import { useHttp } from "../../hooks/http";
+import authCtx from "../../ctxStore/auth_ctx";
+import CardList from "../../components/containers/CardList/CardList";
+import CardListSkeleton from "../../components/ui/Skeletons/CardListSkeleton";
+import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner";
+import CustomDialog from "../../components/ui/CustomDialog/CustomDialog";
 
-const MyProducts = (props) => {
-  const { history, token } = props;
+const MyProducts = () => {
   const [products, setProducts] = useState([]);
   const [productIdToDelete, setProductIdToDelete] = useState(null);
   const [dialog, setDialog] = useState(false);
   const [dialogText, setDialogText] = useState("");
   const { data, loading, reqIdentifier, reqExtra, sendRequest } = useHttp();
+  const router = useRouter();
+  const { token } = useContext(authCtx);
   useEffect(() => {
     if (
       data &&
@@ -65,7 +67,7 @@ const MyProducts = (props) => {
         products={products}
         totalResult={data?.totalDocs || 0}
         render={(item) => (
-          <CardActions about="kjkjkj">
+          <CardActions about="del and edit">
             <IconButton
               onClick={() => {
                 deleteBtnPressed(item._id, item.title);
@@ -76,9 +78,10 @@ const MyProducts = (props) => {
             <div style={{ flexGrow: 1 }}></div>
             <IconButton
               onClick={() => {
-                history.push("/admin/edit-product", {
-                  productId: item._id,
-                });
+                router.push(
+                  `/admin/edit-product?productId=${item._id}`,
+                  "/admin/edit-product"
+                );
               }}
             >
               <Edit color="action" />
@@ -114,8 +117,4 @@ const MyProducts = (props) => {
   );
 };
 
-const mapStatesToProps = (state) => ({
-  token: state.auth.token,
-});
-
-export default connect(mapStatesToProps)(MyProducts);
+export default MyProducts;

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Card,
   CardContent,
@@ -10,52 +9,49 @@ import {
   LinearProgress,
 } from "@material-ui/core";
 
-import { useHttp } from "../../../hooks/http";
-import {
-  authSuccess,
-  startRefreshTokenTimer,
-  setCart,
-} from "../../../store/actions";
-import Axios from "../../../axios";
-import LoadingSpinner from "../../../components/ui/LoadingSpinner/LoadingSpinner";
-import CustomDialog from "../../../components/ui/CustomDialog/CustomDialog";
+import { useHttp } from "../../hooks/http";
+import Axios from "../../axios";
+import authCtx from "../../ctxStore/auth_ctx";
+import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner";
+import CustomDialog from "../../components/ui/CustomDialog/CustomDialog";
+import cartCtx from "../../ctxStore/cart_ctx";
 
-const Login = (props) => {
-  const { authSuccess, startRefreshTokenTimer, setCart } = props;
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const changeEmail = (e) => setEmail(e.target.value);
   const changePassword = (e) => setPassword(e.target.value);
   const [dialog, setDialog] = useState(false);
 
+  const authContext = useContext(authCtx);
+  const { setCart } = useContext(cartCtx);
   const { data, loading, error, sendRequest } = useHttp();
 
   useEffect(() => {
     if (error) {
+      console.log(error);
       setDialog(true);
     }
     if (data) {
-      const { token, userId, tokenExpiration } = data;
+      const { token, userId } = data;
       Axios(token)
         .get("/admin/user")
         .then(({ data: { user } }) => {
-          const expirationDate = new Date(
-            new Date().getTime() + tokenExpiration * 1000
-          );
           localStorage.setItem("isLoggedIn", !!token);
           localStorage.setItem("user", JSON.stringify(user));
-          authSuccess(token, userId, expirationDate, user);
+          authContext.authSuccess(token, userId, user);
           return Axios(token).get("/admin/cart");
         })
         .then(({ data }) => {
           setCart(data);
-          startRefreshTokenTimer();
+          authContext.startRefreshTokenTimer(token);
         })
         .catch((err) => {
+          console.log(err);
           setDialog(true);
         });
     }
-  }, [data, error, startRefreshTokenTimer, authSuccess, setCart]);
+  }, [data, error]);
   const login = () => {
     sendRequest("/admin/login", "post", { email, password });
   };
@@ -99,8 +95,4 @@ const Login = (props) => {
   );
 };
 
-export default connect(null, {
-  authSuccess,
-  startRefreshTokenTimer,
-  setCart,
-})(Login);
+export default Login;

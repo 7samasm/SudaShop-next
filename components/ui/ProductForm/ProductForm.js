@@ -1,5 +1,10 @@
-import React, { useEffect, Fragment, useReducer, useState } from "react";
-import { connect } from "react-redux";
+import React, {
+  useEffect,
+  Fragment,
+  useReducer,
+  useState,
+  useContext,
+} from "react";
 import PropTypes from "prop-types";
 import { Autocomplete } from "@material-ui/lab";
 import {
@@ -10,10 +15,13 @@ import {
   CardContent,
   LinearProgress,
 } from "@material-ui/core";
+import { useRouter } from "next/router";
 
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import CustomDialog from "../CustomDialog/CustomDialog";
 import { useHttp } from "../../../hooks/http";
+import sectionsCtx from "../../../ctxStore/sections_ctx";
+import authCtx from "../../../ctxStore/auth_ctx";
 
 const initDialogState = {
   open: false,
@@ -47,16 +55,16 @@ const dialogReducer = (state, { type, text }) => {
   }
 };
 
-const ProductForm = (props) => {
-  const { history, token, editable } = props;
-
+const ProductForm = ({ editable }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [section, setSection] = useState("");
   const [imageUrl] = useState("d.jpg");
-  const [productId] = useState(history.location.state?.productId);
 
+  const { sections } = useContext(sectionsCtx);
+  const { token } = useContext(authCtx);
+  const router = useRouter();
   const [dialogState, dialogDispatch] = useReducer(
     dialogReducer,
     initDialogState
@@ -89,10 +97,12 @@ const ProductForm = (props) => {
     }
   }, [data, reqIdentifier, error]);
 
+  // router.beforePopState(console.log('zzzzzzzzzzzzzzzzzzzzz'));
+
   useEffect(() => {
     if (editable) {
       sendRequest(
-        `admin/products/${productId}`,
+        `admin/products/${router.query.productId}`,
         "get",
         null,
         null,
@@ -102,9 +112,9 @@ const ProductForm = (props) => {
     }
     // listen to token cause re-render so was removed from array deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sendRequest, editable, productId]);
+  }, [sendRequest, editable, router]);
 
-  const autocompleteOptions = props.sections.map((val) => val.name);
+  const autocompleteOptions = sections.map((val) => val.name);
   const btnText = editable ? "Edit" : "Add";
   const colorTheme = editable ? "secondary" : "primary";
 
@@ -116,14 +126,14 @@ const ProductForm = (props) => {
   };
   const lastButtonClicked = () => {
     if (editable) {
-      history.push("/admin/my-products");
+      router.push("/admin/my-products");
       return;
     }
     clearFields();
     dialogDispatch({ type: "CLOSE" });
   };
   const firstButtonClicked = () => {
-    history.push("/admin/my-products");
+    router.push("/admin/my-products");
   };
   const sendForm = () => {
     const grapedValues = {
@@ -146,7 +156,7 @@ const ProductForm = (props) => {
       url = "admin/edit-product";
       method = "put";
       identifier = "EDIT_PRODUCT";
-      formData.append("productId", productId);
+      formData.append("productId", router.query.productId);
     }
     sendRequest(url, method, formData, null, identifier, token);
   };
@@ -220,14 +230,8 @@ const ProductForm = (props) => {
   );
 };
 
-const mapStatesToProps = (state) => ({
-  token: state.auth.token,
-  sections: state.config.sections,
-});
-
 ProductForm.propTypes = {
   editable: PropTypes.bool,
-  history: PropTypes.object,
 };
 
-export default connect(mapStatesToProps)(ProductForm);
+export default ProductForm;
