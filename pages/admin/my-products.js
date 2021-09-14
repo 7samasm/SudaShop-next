@@ -69,7 +69,8 @@ const MyProducts = () => {
         render={(item) => (
           <CardActions about="del and edit">
             <IconButton
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 deleteBtnPressed(item._id, item.title);
               }}
             >
@@ -77,7 +78,8 @@ const MyProducts = () => {
             </IconButton>
             <div style={{ flexGrow: 1 }}></div>
             <IconButton
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 router.push(
                   `/admin/edit-product?productId=${item._id}`,
                   "/admin/edit-product"

@@ -27,9 +27,9 @@ const CardItem = ({ item, render }) => {
   const classes = useStyles();
   return (
     <Card elevation={5} className={classes.card}>
-      {render()}
       <Link href={`/products/${item._id}`}>
         <CardActionArea style={{ padding: "10px 0" }}>
+          {render()}
           <CardMedia
             className={classes.media}
             image={img.src}
