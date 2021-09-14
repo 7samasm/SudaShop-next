@@ -15,6 +15,7 @@ export const SectionsProvider = ({ children }) => {
       setSections(data);
     } catch (error) {
       console.log(error);
+      setSections([]);
     }
   }
   const ctx = {

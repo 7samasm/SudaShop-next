@@ -7,10 +7,18 @@ const headers = {
     "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
 };
 
-const axiosBuilder = (token) => {
+const axiosBuilder = (token, isRealUrl = false) => {
+  // default is useing proxy url insted of real one
+  let baseURL = "/api/proxy/active-slug";
+  if (isRealUrl) {
+    baseURL = "http://localhost:3000/hpi/";
+  }
+  if (token) {
+    headers["Authorization"] = "bearer " + token;
+  }
   return axios.create({
-    baseURL: "http://localhost:3000/hpi",
-    headers: { ...headers, Authorization: "bearer " + token },
+    baseURL,
+    headers: { ...headers },
   });
 };
 

@@ -68,6 +68,7 @@ export const AuthProvider = ({ children }) => {
       const { id } = JSON.parse(atob(token.split(".")[1]));
       authSuccess(token, id, user);
       startRefreshTokenTimer(token);
+      return token;
     } catch (error) {
       console.log(error);
       logout();

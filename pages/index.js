@@ -20,13 +20,20 @@ const Index = ({ data }) => {
 };
 
 export async function getStaticProps() {
-  const { data } = await axiosBuilder().get("products?page=1");
-  return {
-    props: {
-      data,
-    },
-    revalidate: 10,
-  };
+  try {
+    const { data } = await axiosBuilder(null, true).get("/products");
+    // const res = await fetch("http://localhost:3000/hpi/products");
+    // const data = await res.json();
+    return {
+      props: {
+        data,
+      },
+      revalidate: 100,
+    };
+  } catch (error) {
+    console.log(error.message);
+    return { notFound: true, revalidate: 100 };
+  }
 }
 
 export default Index;

@@ -146,7 +146,7 @@ const TemporaryDrawer = React.memo(() => {
       </List>
       <Collapse in={isCollapseOpen}>
         <List>
-          {sectionsContext.sections.map((section) => (
+          {[...sectionsContext.sections].map((section) => (
             <Link href={`/sections/${section.name}/1`} key={section._id}>
               <ListItem
                 button

@@ -5,6 +5,7 @@ import { useContext, useEffect } from "react";
 import { DrawerProvider } from "../../ctxStore/drawer_ctx";
 import sectionsCtx from "../../ctxStore/sections_ctx";
 import authCtx from "../../ctxStore/auth_ctx";
+import cartCtx from "../../ctxStore/cart_ctx";
 
 const theme = createTheme({
   palette: {
@@ -22,12 +23,18 @@ const theme = createTheme({
 });
 
 export default function DefaultLayout(props) {
-  const sectionsContext = useContext(sectionsCtx);
-  const authContext = useContext(authCtx);
+  const { loadSections } = useContext(sectionsCtx);
+  const { refreshToken } = useContext(authCtx);
+  const { getAndSetCart } = useContext(cartCtx);
 
   async function onLayoutInit() {
-    await sectionsContext.loadSections();
-    await authContext.refreshToken();
+    try {
+      await loadSections();
+      const { token } = await refreshToken();
+      await getAndSetCart(token);
+    } catch (error) {
+      throw errorr;
+    }
   }
 
   useEffect(() => {
