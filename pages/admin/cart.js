@@ -31,13 +31,13 @@ const Cart = () => {
       const currItems = products.find((cartItem) => cartItem._id === reqExtra);
       // console.log(`%c ${currItems}`, "color:teal;font-size:18px;");
       if (currItems) {
-        const totalItems = totalItems - currItems.quantity;
+        const total = totalItems - currItems.quantity;
         const calcTotalPrice =
           totalPrice - currItems.quantity * currItems.price;
         setCart({
           products: filteredCartItems,
           totalPrice: calcTotalPrice,
-          totalItems,
+          totalItems: total,
         });
       }
     }
@@ -53,7 +53,7 @@ const Cart = () => {
       token
     );
   };
-  const transformedCartItems = products.map(
+  const transformedCartItems = products?.map(
     ({ _id, title, price, quantity }) => (
       <Grid item key={_id}>
         <Link href={`/product/${_id}`}>
