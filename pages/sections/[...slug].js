@@ -5,14 +5,18 @@ import CardListSkeleton from "../../components/ui/Skeletons/CardListSkeleton";
 import { handlePaginationChange } from "../../hooks/pagination";
 
 const Index = ({ data }) => {
-  const { push } = useRouter();
+  const router = useRouter();
+  const [section] = router.query.slug;
   const renderPageOrSkeleton = data ? (
     <CartListWithSettingsAndPagination
       products={data.docs}
       totalResult={data.totalDocs}
       totalPages={data.totalPages}
-      onPaginationChange={handlePaginationChange("/page", push)}
-      baseSortUrl="/sort/all"
+      baseSortUrl={`/sort/${section}`}
+      onPaginationChange={handlePaginationChange(
+        `/sections/${section}`,
+        router.push
+      )}
     />
   ) : (
     <CardListSkeleton />
@@ -21,8 +25,9 @@ const Index = ({ data }) => {
 };
 
 export async function getServerSideProps({ query }) {
+  const [section, page] = query.slug;
   const { data } = await axiosBuilder(null, true).get(
-    `products?page=${query.page}`
+    `/products/section/${section}?page=${page}`
   );
   return {
     props: {

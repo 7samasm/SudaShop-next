@@ -34,4 +34,10 @@ const usePage = (endpointUrl) => {
   return [data, handlePaginationChange];
 };
 
+export const handlePaginationChange = (url, routerPushMethodPointer) => {
+  return (event, page) => {
+    routerPushMethodPointer(`${url}/${page}`);
+  };
+};
+
 export default usePage;

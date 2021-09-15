@@ -23,6 +23,7 @@ const CartListWithSettingsAndPagination = ({
 }) => {
   const classes = useStyles();
   const router = useRouter();
+  const slug = router.query?.slug;
   return (
     <Grid container direction="column" alignItems="center">
       {products.length > 0 && (
@@ -31,7 +32,15 @@ const CartListWithSettingsAndPagination = ({
       <CardList products={products} />
       {products.length > 0 && (
         <Pagination
-          page={parseInt(router.query.page) || 1}
+          page={
+            parseInt(router.query.page) ||
+            /*
+             * if you use [...slug] so page param doesnt work
+             * insted u can use slug param which contain rest of param in slug property
+             * that store array of params => [sort,order,page]
+             */
+            parseInt(slug ? slug[slug.length - 1] : 1)
+          }
           count={totalPages}
           color="primary"
           className={classes["my-2"]}

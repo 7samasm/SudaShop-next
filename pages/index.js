@@ -1,16 +1,18 @@
+import { useRouter } from "next/router";
 import axiosBuilder from "../axios";
 import CartListWithSettingsAndPagination from "../components/containers/CardList/CartListWithSettingsAndPagination";
 import CardListSkeleton from "../components/ui/Skeletons/CardListSkeleton";
+import { handlePaginationChange } from "../hooks/pagination";
 // import usePage from "../hooks/pagination";
 
 const Index = ({ data }) => {
-  // const [data, createOnPageinationChangeHandler] = usePage(`/products?page=1`);
+  const { push } = useRouter();
   const renderPageOrSkeleton = data ? (
     <CartListWithSettingsAndPagination
       products={data.docs}
       totalResult={data.totalDocs}
       totalPages={data.totalPages}
-      onPaginationChange={() => {}}
+      onPaginationChange={handlePaginationChange("/page", push)}
       baseSortUrl="/sort/all"
     />
   ) : (
