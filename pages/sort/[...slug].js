@@ -36,7 +36,7 @@ export async function getServerSideProps({ query }) {
       break;
   }
   try {
-    const { data } = await axiosBuilder(null, true).get(url);
+    const { data } = await axiosBuilder().get(url);
     return {
       props: { data },
     };

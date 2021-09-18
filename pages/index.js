@@ -23,7 +23,7 @@ const Index = ({ data }) => {
 
 export async function getStaticProps() {
   try {
-    const { data } = await axiosBuilder(null, true).get("/products");
+    const { data } = await axiosBuilder().get("/products");
     // const res = await fetch("http://localhost:3000/hpi/products");
     // const data = await res.json();
     return {

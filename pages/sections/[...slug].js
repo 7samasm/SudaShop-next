@@ -26,7 +26,7 @@ const Index = ({ data }) => {
 
 export async function getServerSideProps({ query }) {
   const [section, page] = query.slug;
-  const { data } = await axiosBuilder(null, true).get(
+  const { data } = await axiosBuilder().get(
     `/products/section/${section}?page=${page}`
   );
   return {

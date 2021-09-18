@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
   async function refreshToken(refresh_token) {
     try {
       const {
-        data: { token },
+        data: { token, refreshToken },
       } = await Axios().post(
         `/admin/refresh-token?refresh_token=${refresh_token}`
       );
@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
       } = await Axios(token).get("/admin/user");
       const { id } = JSON.parse(atob(token.split(".")[1]));
       authSuccess(token, id, user);
-      startRefreshTokenTimer(token);
+      startRefreshTokenTimer(token, refreshToken);
       return token;
     } catch (error) {
       console.log(error);

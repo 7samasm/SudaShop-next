@@ -37,7 +37,7 @@ export default NextAuth({
     Providers.Credentials({
       async authorize({ email, password }, req) {
         // Add logic here to look up the user from the credentials supplied
-        const { data } = await axiosBuilder(null, true).post("/admin/login", {
+        const { data } = await axiosBuilder().post("/admin/login", {
           email,
           password,
         });
@@ -65,7 +65,7 @@ export default NextAuth({
  */
 async function refreshAccessToken(token) {
   try {
-    const { data } = await axiosBuilder(null, true).post(
+    const { data } = await axiosBuilder().post(
       `/admin/refresh-token?refresh_token=${token.refreshToken}`
     );
     const refreshedToken = data;

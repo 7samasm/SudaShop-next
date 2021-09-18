@@ -176,7 +176,7 @@ export default function ProductOverView({ postState }) {
 }
 
 export async function getServerSideProps({ params }) {
-  const { data } = await Axios(null, true).get(`products/${params.id}`);
+  const { data } = await Axios().get(`products/${params.id}`);
 
   return {
     props: {
