@@ -39,7 +39,7 @@ const CartDialog = ({ dialogValue, onShadowClick, style, productId }) => {
       });
       setCart({ products, totalItems, totalPrice });
     }
-  }, [data, setCart]);
+  }, [data]);
   const dialogHeaderDir = theme.direction === "ltr" ? "row" : "row-reverse";
   const dialogBtnDir = theme.direction === "ltr" ? "row-reverse" : "row";
   const toggleInputColor = (e) => {

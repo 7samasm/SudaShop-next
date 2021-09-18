@@ -27,6 +27,8 @@ const authReducer = (state, { type, token, userId, user }) => {
   }
 };
 
+var timer;
+
 const authCtx = createContext({
   ...initState,
   isLoggedIn: false,
@@ -52,15 +54,17 @@ export const AuthProvider = ({ children }) => {
     ["isLoggedIn", "user"].forEach((item) => {
       localStorage.removeItem(item);
     });
-    // clearTimeout(timer);
+    clearTimeout(timer);
     authDispatch({ type: "AUTH_LOGOUT" });
   }
 
-  async function refreshToken() {
+  async function refreshToken(refresh_token) {
     try {
       const {
         data: { token },
-      } = await Axios().post("/admin/refresh-token");
+      } = await Axios().post(
+        `/admin/refresh-token?refresh_token=${refresh_token}`
+      );
       console.log(token);
       const {
         data: { user },
@@ -75,14 +79,14 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  function startRefreshTokenTimer(token) {
+  function startRefreshTokenTimer(token, refresh_token) {
     const expiredJWT = JSON.parse(atob(token.split(".")[1]));
     console.log(expiredJWT);
     const expire = new Date(expiredJWT.exp * 1000);
     console.log(expire);
-    const timeout = expire.getTime() - new Date().getTime() - 1000;
-    setTimeout(() => {
-      refreshToken();
+    const timeout = expire.getTime() - new Date().getTime() - 2000;
+    timer = setTimeout(() => {
+      refreshToken(refresh_token);
     }, timeout);
     // console.log(`%c ${timer}`, "font-size:18px;color:#4c3bd4");
     // console.log(`%c ${getState().auth}`, "font-size:18px;color:#4c3bd4");

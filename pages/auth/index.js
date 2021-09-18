@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
   Card,
   CardContent,
@@ -9,8 +9,9 @@ import {
   LinearProgress,
 } from "@material-ui/core";
 
+import { signin, getSession } from "next-auth/client";
+
 import { useHttp } from "../../hooks/http";
-import Axios from "../../axios";
 import authCtx from "../../ctxStore/auth_ctx";
 import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner";
 import CustomDialog from "../../components/ui/CustomDialog/CustomDialog";
@@ -23,37 +24,28 @@ const Login = () => {
   const changePassword = (e) => setPassword(e.target.value);
   const [dialog, setDialog] = useState(false);
 
-  const authContext = useContext(authCtx);
-  const { setCart } = useContext(cartCtx);
+  const { authSuccess, startRefreshTokenTimer } = useContext(authCtx);
+  const { getAndSetCart } = useContext(cartCtx);
+  // const [session] = useSession();
   const { data, loading, error, sendRequest } = useHttp();
 
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-      setDialog(true);
+  const login = async () => {
+    try {
+      const result = await signin("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      const { accessToken, refreshToken, user } = await getSession();
+      authSuccess(accessToken, user.userId, user);
+      await getAndSetCart(accessToken);
+      startRefreshTokenTimer(accessToken, refreshToken);
+    } catch (error) {
+      console.log(error.message);
     }
-    if (data) {
-      const { token, userId } = data;
-      Axios(token)
-        .get("/admin/user")
-        .then(({ data: { user } }) => {
-          localStorage.setItem("isLoggedIn", !!token);
-          localStorage.setItem("user", JSON.stringify(user));
-          authContext.authSuccess(token, userId, user);
-          return Axios(token).get("/admin/cart");
-        })
-        .then(({ data }) => {
-          setCart(data);
-          authContext.startRefreshTokenTimer(token);
-        })
-        .catch((err) => {
-          console.log(err);
-          setDialog(true);
-        });
-    }
-  }, [data, error]);
-  const login = () => {
-    sendRequest("/admin/login", "post", { email, password });
   };
   return (
     <Grid container justifyContent="center">
@@ -81,7 +73,7 @@ const Login = () => {
               />
             </FormControl>
             <Button
-              onClick={() => login()}
+              onClick={login}
               color="primary"
               variant="outlined"
               style={{ display: "Block", marginTop: "15px" }}

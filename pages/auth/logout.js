@@ -1,13 +1,19 @@
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import authCtx from "../../ctxStore/auth_ctx";
+import { signOut } from "next-auth/client";
 
 export default function Logout() {
   const router = useRouter();
-  const authcx = useContext(authCtx);
+  const { logout } = useContext(authCtx);
+  const logoutHandler = async () => {
+    await signOut({ redirect: false });
+    logout();
+  };
   useEffect(() => {
-    authcx.logout();
-    router.replace("/");
+    logoutHandler().then(() => {
+      router.replace("/");
+    });
   }, []);
   return null;
 }
