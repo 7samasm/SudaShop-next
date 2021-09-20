@@ -31,14 +31,14 @@ export default function DefaultLayout(props) {
     try {
       await loadSections();
       const session = await getSession();
-      console.log(session);
-      if (session.error) {
-        throw new Error("error accured");
-      }
-      authSuccess(session.accessToken, session.user.userId, session.user);
-      await getAndSetCart(session.accessToken);
       if (session) {
-        startRefreshTokenTimer(session.accessToken, session.refreshToken);
+        const { accessToken, refreshToken, user, error } = session;
+        if (session.error) {
+          throw new Error(error);
+        }
+        authSuccess(accessToken, user.userId, user);
+        await getAndSetCart(accessToken);
+        startRefreshTokenTimer(accessToken, refreshToken);
       }
     } catch (error) {
       throw error;

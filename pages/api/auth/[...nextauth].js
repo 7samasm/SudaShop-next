@@ -29,7 +29,6 @@ export default NextAuth({
       session.refreshToken = token.refreshToken;
       session.accessTokenExpires = token.accessTokenExpires;
       session.error = token.error;
-      console.log(session);
       return session;
     },
   },
@@ -42,7 +41,6 @@ export default NextAuth({
           password,
         });
         const user = data;
-        console.log(data);
         if (user) {
           // Any object returned will be saved in `user` property of the JWT
           return user;
@@ -69,6 +67,7 @@ async function refreshAccessToken(token) {
       `/admin/refresh-token?refresh_token=${token.refreshToken}`
     );
     const refreshedToken = data;
+    console.log("********");
     return {
       ...token,
       accessToken: refreshedToken.token,
@@ -77,7 +76,7 @@ async function refreshAccessToken(token) {
       refreshToken: refreshedToken.refreshToken ?? token.refreshToken, // Fall back to old refresh token
     };
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     return {
       ...token,
       error: "RefreshAccessTokenError",

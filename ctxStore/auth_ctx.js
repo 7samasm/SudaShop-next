@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
     console.log(expiredJWT);
     const expire = new Date(expiredJWT.exp * 1000);
     console.log(expire);
-    const timeout = expire.getTime() - new Date().getTime() - 2000;
+    const timeout = expire.getTime() - new Date().getTime() - 20000;
     timer = setTimeout(() => {
       refreshToken(refresh_token);
     }, timeout);
