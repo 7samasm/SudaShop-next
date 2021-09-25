@@ -37,9 +37,9 @@ const MyProducts = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, reqIdentifier, reqExtra, setProducts]);
   useEffect(() => {
-    sendRequest("admin/products", "get", null, null, "FETCH_PRODUCTS", token);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sendRequest]);
+    if (token)
+      sendRequest("admin/products", "get", null, null, "FETCH_PRODUCTS", token);
+  }, [sendRequest, token]);
 
   const deleteBtnPressed = (productId, title) => {
     setDialogText(`do you really want to delete ${title} ?`);
