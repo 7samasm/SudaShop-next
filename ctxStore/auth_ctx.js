@@ -1,5 +1,5 @@
 const { createContext, useReducer } = require("react");
-import Axios from "../axios";
+import { getSession, signIn, signout } from "next-auth/client";
 import { updateObject } from "../util/updateObject";
 
 const initState = {
@@ -50,46 +50,41 @@ export const AuthProvider = ({ children }) => {
     });
   }
 
-  function logout() {
-    ["isLoggedIn", "user"].forEach((item) => {
-      localStorage.removeItem(item);
-    });
+  async function logout() {
+    await signout({ redirect: false });
     clearTimeout(timer);
     authDispatch({ type: "AUTH_LOGOUT" });
   }
 
-  async function refreshToken(refresh_token) {
+  async function refreshToken() {
     try {
-      const {
-        data: { token, refreshToken },
-      } = await Axios().post(
-        `/admin/refresh-token?refresh_token=${refresh_token}`
-      );
-      console.log(token);
-      const {
-        data: { user },
-      } = await Axios(token).get("/admin/user");
-      const { id } = JSON.parse(atob(token.split(".")[1]));
-      authSuccess(token, id, user);
-      startRefreshTokenTimer(token, refreshToken);
-      return token;
+      const result = await signIn("credentials", {
+        redirect: false,
+      });
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      const { accessToken, user } = await getSession();
+      console.log("{{{rt}}}", user);
+      authSuccess(accessToken, user.userId, user);
+      startRefreshTokenTimer(accessToken);
     } catch (error) {
       console.log(error);
-      logout();
+      // logout();
     }
   }
 
-  function startRefreshTokenTimer(token, refresh_token) {
+  function startRefreshTokenTimer(token) {
     const expiredJWT = JSON.parse(atob(token.split(".")[1]));
     console.log(expiredJWT);
     const expire = new Date(expiredJWT.exp * 1000);
     console.log(expire);
-    const timeout = expire.getTime() - new Date().getTime() - 20000;
+    const timeout = expire.getTime() - new Date().getTime() - 10000;
     timer = setTimeout(() => {
-      refreshToken(refresh_token);
+      refreshToken();
     }, timeout);
-    // console.log(`%c ${timer}`, "font-size:18px;color:#4c3bd4");
-    // console.log(`%c ${getState().auth}`, "font-size:18px;color:#4c3bd4");
+    return timer;
   }
   const ctx = {
     ...authState,

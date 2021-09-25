@@ -9,7 +9,7 @@ import {
   LinearProgress,
 } from "@material-ui/core";
 
-import { signin, getSession } from "next-auth/client";
+import { getSession, signIn } from "next-auth/client";
 
 import { useHttp } from "../../hooks/http";
 import authCtx from "../../ctxStore/auth_ctx";
@@ -31,7 +31,7 @@ const Login = () => {
 
   const login = async () => {
     try {
-      const result = await signin("credentials", {
+      const result = await signIn("credentials", {
         redirect: false,
         email,
         password,
@@ -39,10 +39,10 @@ const Login = () => {
       if (result.error) {
         throw new Error(result.error);
       }
-      const { accessToken, refreshToken, user } = await getSession();
+      const { accessToken, user } = await getSession();
       authSuccess(accessToken, user.userId, user);
       await getAndSetCart(accessToken);
-      startRefreshTokenTimer(accessToken, refreshToken);
+      startRefreshTokenTimer(accessToken);
     } catch (error) {
       console.log(error.message);
     }

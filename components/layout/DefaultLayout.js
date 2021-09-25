@@ -32,13 +32,13 @@ export default function DefaultLayout(props) {
       await loadSections();
       const session = await getSession();
       if (session) {
-        const { accessToken, refreshToken, user, error } = session;
+        const { accessToken, user, error } = session;
         if (error) {
           throw new Error(error);
         }
         authSuccess(accessToken, user.userId, user);
         await getAndSetCart(accessToken);
-        startRefreshTokenTimer(accessToken, refreshToken);
+        startRefreshTokenTimer(accessToken);
       }
     } catch (error) {
       throw error;
@@ -47,11 +47,12 @@ export default function DefaultLayout(props) {
 
   useEffect(() => {
     onLayoutInit()
-      .then(() => {
+      .then((timer) => {
         const jssStyles = document.querySelector("#jss-server-side");
         if (jssStyles) {
           jssStyles.parentElement.removeChild(jssStyles);
         }
+        return () => clearTimeout(timer);
       })
       .catch((e) => {
         console.log(e);
