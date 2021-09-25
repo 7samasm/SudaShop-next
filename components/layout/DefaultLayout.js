@@ -33,7 +33,7 @@ export default function DefaultLayout(props) {
       const session = await getSession();
       if (session) {
         const { accessToken, refreshToken, user, error } = session;
-        if (session.error) {
+        if (error) {
           throw new Error(error);
         }
         authSuccess(accessToken, user.userId, user);

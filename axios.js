@@ -12,7 +12,7 @@ const axiosBuilder = (token) => {
     headers["Authorization"] = "bearer " + token;
   }
   return axios.create({
-    baseURL: "http://localhost:3000/hpi/",
+    baseURL: "http://localhost:7878/hpi/",
     headers: { ...headers },
   });
 };

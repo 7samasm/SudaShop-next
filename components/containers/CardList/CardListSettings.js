@@ -18,6 +18,7 @@ import {
   FormControlLabel,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
+import mapSortProps from "../../../util/mapSortProps";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -68,14 +69,7 @@ const CardListSettings = ({ totalResult, baseSortUrl }) => {
               style={{ width: "70px" }}
               value={sort}
               onChange={handleSortChange}
-              renderValue={(value) => {
-                const optionValue = {
-                  title: "alphabet",
-                  price: "price",
-                  createdAt: "date",
-                };
-                return optionValue[value];
-              }}
+              renderValue={(value) => mapSortProps[value]}
             >
               <MenuItem value="price" style={{ width: "135px" }}>
                 <Typography component="span" variant="caption">
@@ -87,7 +81,7 @@ const CardListSettings = ({ totalResult, baseSortUrl }) => {
 
               <MenuItem value="title" style={{ width: "135px" }}>
                 <Typography component="span" variant="caption">
-                  alphbet
+                  alphabet
                 </Typography>
                 <div style={{ flexGrow: 1 }}></div>
                 <Icon

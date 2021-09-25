@@ -1,17 +1,19 @@
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import axiosBuilder from "../../../axios";
+import * as chalk from "chalk";
 export default NextAuth({
   callbacks: {
-    jwt(token, user) {
+    async jwt(token, user) {
+      console.log(chalk.yellow("[[jwt cb called ]]"));
       if (user) {
+        console.log(chalk.bgBlack.magenta("user found"));
         const userCopy = { ...user };
         ["refreshToken", "token", "tokenExpireIn"].forEach((el) => {
           delete userCopy[el];
         });
         return {
           accessToken: user.token,
-          // accessTokenExpires: Date.now() + user.tokenExpireIn * 1000,
           accessTokenExpires: user.tokenExpireIn,
           refreshToken: user.refreshToken,
           user: userCopy,
@@ -19,11 +21,17 @@ export default NextAuth({
         };
       }
       // Return previous token if the access token has not expired yet
-      if (Date.now() < token.accessTokenExpires) return token;
+      if (
+        false
+        // new Date(new Date().getTime() + token.accessTokenExpires * 1000) >
+        // new Date()
+      )
+        return token;
       // Access token has expired, try to update it
-      return refreshAccessToken(token);
+      const refreshedToken = await refreshAccessToken(token);
+      return refreshedToken;
     },
-    session(session, token) {
+    async session(session, token) {
       session.user = token.user;
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
@@ -62,21 +70,25 @@ export default NextAuth({
  * returns the old token and an error property
  */
 async function refreshAccessToken(token) {
+  console.log(
+    chalk.bgBlue.white(
+      "[[refreshAccessToken {{token param}} ]]",
+      JSON.stringify(token)
+    )
+  );
   try {
     const { data } = await axiosBuilder().post(
       `/admin/refresh-token?refresh_token=${token.refreshToken}`
     );
     const refreshedToken = data;
-    console.log("********");
     return {
       ...token,
       accessToken: refreshedToken.token,
-      // accessTokenExpires: Date.now() + refreshedToken.tokenExpireIn * 1000,
       accessTokenExpires: refreshedToken.tokenExpireIn,
       refreshToken: refreshedToken.refreshToken ?? token.refreshToken, // Fall back to old refresh token
     };
   } catch (error) {
-    console.log(error.message);
+    console.log(chalk.bgRed.yellow(error?.response.data.message));
     return {
       ...token,
       error: "RefreshAccessTokenError",

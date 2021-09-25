@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { CardActions, IconButton } from "@material-ui/core";
 import { Delete, Edit } from "@material-ui/icons";
 import { useRouter } from "next/router";
@@ -96,7 +96,7 @@ const MyProducts = () => {
     );
 
   return (
-    <Fragment>
+    <>
       <CustomDialog
         open={dialog}
         title="warning:"
@@ -115,7 +115,7 @@ const MyProducts = () => {
         renderLoader={true}
       />
       {cardListOrLoader}
-    </Fragment>
+    </>
   );
 };
 

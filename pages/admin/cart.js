@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from "react";
-import Link from "next/link";
 import {
   Grid,
   Card,
@@ -20,8 +19,9 @@ import authCtx from "../../ctxStore/auth_ctx";
 
 const Cart = () => {
   const { data, sendRequest, reqExtra, loading } = useHttp();
-  const { totalPrice, totalItems, setCart, products } = useContext(cartCtx);
+  const { totalPrice, totalItems, products, setCart } = useContext(cartCtx);
   const { token } = useContext(authCtx);
+
   useEffect(() => {
     // console.log(data);
     if (data) {
@@ -56,50 +56,51 @@ const Cart = () => {
   const transformedCartItems = products?.map(
     ({ _id, title, price, quantity }) => (
       <Grid item key={_id}>
-        <Link href={`/product/${_id}`}>
-          <CartItem
-            title={title}
-            price={price}
-            quantity={quantity}
-            onDeleteCartItem={() => deleteCartItem(_id)}
-          />
-        </Link>
+        <CartItem
+          title={title}
+          price={price}
+          quantity={quantity}
+          onDeleteCartItem={() => deleteCartItem(_id)}
+        />
       </Grid>
     )
   );
-  const renderCartOrAlert =
-    totalItems > 0 ? (
-      <>
-        <LoadingSpinner open={loading} renderLoader />
-        <Grid item>
-          <Typography component="p" variant="body2" color="textSecondary">
-            <ClearAll /> cart items
-          </Typography>
-        </Grid>
-        {transformedCartItems}
-        <Grid item className="mt-4">
-          <Typography component="p" variant="body2" color="textSecondary">
-            <Functions /> total price
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Card style={{ borderRadius: "1rem" }}>
-            <List disablePadding>
-              <ListItem>
-                <ListItemText>total</ListItemText>
-                <ListItemIcon>
-                  <Typography component="p" variant="body1" color="primary">
-                    {totalPrice} SDG
-                  </Typography>
-                </ListItemIcon>
-              </ListItem>
-            </List>
-          </Card>
-        </Grid>
-      </>
-    ) : (
-      <Alert severity="warning">there 're no items to show</Alert>
-    );
+  const renderCartOrAlert = products && (
+    <>
+      <LoadingSpinner open={loading} renderLoader />
+      {totalItems > 0 ? (
+        <>
+          <Grid item>
+            <Typography component="p" variant="body2" color="textSecondary">
+              <ClearAll /> cart items
+            </Typography>
+          </Grid>
+          {transformedCartItems}
+          <Grid item className="mt-4">
+            <Typography component="p" variant="body2" color="textSecondary">
+              <Functions /> total price
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Card style={{ borderRadius: "1rem" }}>
+              <List disablePadding>
+                <ListItem>
+                  <ListItemText>total</ListItemText>
+                  <ListItemIcon>
+                    <Typography component="p" variant="body1" color="primary">
+                      {totalPrice} SDG
+                    </Typography>
+                  </ListItemIcon>
+                </ListItem>
+              </List>
+            </Card>
+          </Grid>
+        </>
+      ) : (
+        <Alert severity="warning">there 're no items to show</Alert>
+      )}
+    </>
+  );
 
   return (
     <Grid container direction="column" spacing={3}>
@@ -107,5 +108,31 @@ const Cart = () => {
     </Grid>
   );
 };
+
+/* export async function getServerSideProps({ req, query }) {
+  // const session = await getSession({ req });
+  // console.log(chalk.bgBlueBright.white("session from gssp "), session);
+  // if (!session) {
+  //   return {
+  //     redirect: {
+  //       destination: "/auth",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
+  if (!query?.token) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  const { token, data } = query;
+  // const { data } = await axiosBuilder(token).get("admin/cart");
+  return {
+    props: { token, cartData: JSON.parse(data) },
+  };
+}*/
 
 export default Cart;

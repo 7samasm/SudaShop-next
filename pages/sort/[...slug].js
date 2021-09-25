@@ -1,10 +1,12 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import axiosBuilder from "../../axios";
 import CartListWithSettingsAndPagination from "../../components/containers/CardList/CartListWithSettingsAndPagination";
 import CardListSkeleton from "../../components/ui/Skeletons/CardListSkeleton";
 import { handlePaginationChange } from "../../hooks/pagination";
+import mapSortProps from "../../util/mapSortProps";
 
-const Sort = ({ data }) => {
+const Sort = ({ data, headMeta }) => {
   const router = useRouter();
   const [selector, sort, order] = router.query.slug;
   const renderPageOrSkeleton = data ? (
@@ -21,7 +23,17 @@ const Sort = ({ data }) => {
   ) : (
     <CardListSkeleton />
   );
-  return renderPageOrSkeleton;
+  return (
+    <>
+      <Head>
+        <title>
+          sort {headMeta.selector} by {mapSortProps[headMeta.sort]}{" "}
+          {headMeta.order}
+        </title>
+      </Head>
+      {renderPageOrSkeleton}
+    </>
+  );
 };
 
 export async function getServerSideProps({ query }) {
@@ -38,7 +50,7 @@ export async function getServerSideProps({ query }) {
   try {
     const { data } = await axiosBuilder().get(url);
     return {
-      props: { data },
+      props: { data, headMeta: { selector, sort, order } },
     };
   } catch (error) {
     console.log(error.message);
