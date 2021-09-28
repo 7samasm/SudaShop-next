@@ -11,8 +11,6 @@
     "@material-ui/styles": "^4.11.4",
     "@mdi/js": "^5.9.55",
     "@mdi/react": "^1.5.0",
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.2",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
@@ -38,8 +36,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "PORT=8080 next start",
-    "lint": "next lint"
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest --watch --verbose"
   },
   "eslintConfig": {
     "extends": [
@@ -58,5 +57,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
+    "babel-jest": "^27.2.2",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.2.2",
+    "jest-environment-jsdom": "^27.2.2",
+    "jest-react-hooks-shallow": "^1.5.1",
+    "react-test-renderer": "^17.0.2"
   }
 }

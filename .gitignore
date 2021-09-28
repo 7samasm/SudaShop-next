@@ -34,3 +34,4 @@ yarn-error.log*
 .vercel
 .eslintcache
 .vscode
+__snapshots__/

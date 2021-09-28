@@ -17,8 +17,9 @@ import CartIcon from "@material-ui/icons/ShoppingCart";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import TheDrawer from "../../ui/TheDrawer/TheDrawer";
 import drawerCtx from "../../../ctxStore/drawer_ctx";
-import authCtx from "../../../ctxStore/auth_ctx";
+import authCtx, { useAuthContext } from "../../../ctxStore/auth_ctx";
 import cartCtx from "../../../ctxStore/cart_ctx";
+import callback from "./callback";
 // import "./TheHeader.module.css";
 
 const useStyles = makeStyles((theme) => {
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme) => {
 const PrimarySearchAppBar = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const { isLoggedIn } = useContext(authCtx);
+  const { isLoggedIn } = useAuthContext();
   const { totalItems } = useContext(cartCtx);
   const { openDrawer } = useContext(drawerCtx);
 
@@ -63,6 +64,7 @@ const PrimarySearchAppBar = () => {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
   useEffect(() => {
+    callback();
     console.log("%c [TheHeader] 1st useEffect", "color:red;font-size:20px");
   });
 
@@ -209,7 +211,11 @@ const PrimarySearchAppBar = () => {
                   aria-label="show 17 new notifications"
                   color="primary"
                 >
-                  <Badge badgeContent={totalItems} color="secondary">
+                  <Badge
+                    badgeContent={totalItems}
+                    color="secondary"
+                    className="cart"
+                  >
                     <CartIcon />
                   </Badge>
                 </IconButton>

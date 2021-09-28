@@ -1,4 +1,4 @@
-const { createContext, useReducer } = require("react");
+const { createContext, useReducer, useContext } = require("react");
 import { getSession, signIn, signout } from "next-auth/client";
 import { updateObject } from "../util/updateObject";
 
@@ -37,6 +37,8 @@ const authCtx = createContext({
   startRefreshTokenTimer: function (token) {},
   logout: function () {},
 });
+
+export const useAuthContext = () => useContext(authCtx);
 
 export const AuthProvider = ({ children }) => {
   const [authState, authDispatch] = useReducer(authReducer, initState);
