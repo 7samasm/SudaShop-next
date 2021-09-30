@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Grid } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { useTheme } from "@material-ui/styles";
+import { useTheme } from "@material-ui/core/styles";
 
 import CardItem from "../../ui/CardItem/CardItem";
 const CardList = ({ products, render }) => {

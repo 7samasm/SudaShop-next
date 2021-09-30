@@ -17,7 +17,7 @@ import CartIcon from "@material-ui/icons/ShoppingCart";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import TheDrawer from "../../ui/TheDrawer/TheDrawer";
 import drawerCtx from "../../../ctxStore/drawer_ctx";
-import authCtx, { useAuthContext } from "../../../ctxStore/auth_ctx";
+import { useAuthContext } from "../../../ctxStore/auth_ctx";
 import cartCtx from "../../../ctxStore/cart_ctx";
 import callback from "./callback";
 // import "./TheHeader.module.css";
@@ -168,7 +168,7 @@ const PrimarySearchAppBar = () => {
   ]
     .filter((item) => item.render)
     .map((item) => (
-      <Link href={item.link} key={item.title}>
+      <Link href={item.link} key={item.title} className="cond-render">
         <IconButton aria-label="show 4 new mails" color="primary">
           <item.icon />
         </IconButton>
@@ -206,16 +206,12 @@ const PrimarySearchAppBar = () => {
           <div className={classes.sectionDesktop}>
             {navList}
             {isLoggedIn && (
-              <Link href="/admin/cart">
+              <Link href="/admin/cart" className="cond-render">
                 <IconButton
                   aria-label="show 17 new notifications"
                   color="primary"
                 >
-                  <Badge
-                    badgeContent={totalItems}
-                    color="secondary"
-                    className="cart"
-                  >
+                  <Badge badgeContent={totalItems} color="secondary">
                     <CartIcon />
                   </Badge>
                 </IconButton>

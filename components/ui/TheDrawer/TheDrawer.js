@@ -19,9 +19,10 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import { Icon } from "@mdi/react";
 import { mdiLogin, mdiLogout } from "@mdi/js";
 import avatarImg from "../../../public/images/react.png";
-import drawerCtx from "../../../ctxStore/drawer_ctx";
+import { useDrawerContext } from "../../../ctxStore/drawer_ctx";
 import sectionsCtx from "../../../ctxStore/sections_ctx";
-import authCtx from "../../../ctxStore/auth_ctx";
+import { useAuthContext } from "../../../ctxStore/auth_ctx";
+import callback from "./callback";
 const useStyles = makeStyles((theme) => ({
   list: {
     width: 260,
@@ -46,11 +47,12 @@ const TemporaryDrawer = React.memo(() => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const drawerContext = useContext(drawerCtx);
+  const drawerContext = useDrawerContext();
+  const { isLoggedIn, user } = useAuthContext();
   const sectionsContext = useContext(sectionsCtx);
-  const { isLoggedIn, user } = useContext(authCtx);
 
   useEffect(() => {
+    callback();
     console.log("%c [TheDrawer] 1st useEffect", "color:teal;font-size:20px");
   });
 
@@ -78,7 +80,7 @@ const TemporaryDrawer = React.memo(() => {
   ].map((listItem) => {
     if (listItem.render) {
       return (
-        <Link href={listItem.link} key={listItem.title}>
+        <Link href={listItem.link} key={listItem.title} className="cond-render">
           <ListItem button onClick={closeDrawer}>
             <ListItemIcon>{<listItem.icon />}</ListItemIcon>
             <ListItemText

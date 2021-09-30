@@ -17,8 +17,9 @@ import {
   Radio,
   FormControlLabel,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import mapSortProps from "../../../util/mapSortProps";
+import { doFilter } from "./dependencies/cardListSettings";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -48,17 +49,13 @@ const CardListSettings = ({ totalResult, baseSortUrl }) => {
     }
   }, [router]);
 
-  const doFilter = (sort, order) => {
-    const url = `${baseSortUrl}/${sort}/${order}/1`;
-    router.push(url);
-  };
   const handleOrderChange = (e) => {
     const eventValue = e.target.value;
-    doFilter(sort, eventValue);
+    doFilter(sort, eventValue, baseSortUrl, router.push);
   };
   const handleSortChange = (e) => {
     const eventValue = e.target.value;
-    doFilter(eventValue, "asc");
+    doFilter(eventValue, "asc", baseSortUrl, router.push);
   };
   return (
     <Grid container alignItems="baseline" className={classes["mb-2"]}>

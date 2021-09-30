@@ -1,10 +1,12 @@
-const { createContext, useState } = require("react");
+const { createContext, useState, useContext } = require("react");
 
 const drawerCtx = createContext({
   drawerIsOpen: false,
   openDrawer: function () {},
   closeDrawer: function () {},
 });
+
+export const useDrawerContext = () => useContext(drawerCtx);
 
 export const DrawerProvider = ({ children }) => {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
