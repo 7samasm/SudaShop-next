@@ -1,6 +1,7 @@
 const { createContext, useReducer, useContext } = require("react");
-import { getSession, signIn, signout } from "next-auth/client";
+import { signout } from "next-auth/client";
 import { updateObject } from "../util/updateObject";
+import { onRefreshToken, onStartRefreshToken } from "./util/authCtx.util";
 
 const initState = {
   token: null,
@@ -53,40 +54,16 @@ export const AuthProvider = ({ children }) => {
   }
 
   async function logout() {
-    await signout({ redirect: false });
     clearTimeout(timer);
     authDispatch({ type: "AUTH_LOGOUT" });
   }
 
   async function refreshToken() {
-    try {
-      const result = await signIn("credentials", {
-        redirect: false,
-      });
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-      const { accessToken, user } = await getSession();
-      console.log("{{{rt}}}", user);
-      authSuccess(accessToken, user.userId, user);
-      startRefreshTokenTimer(accessToken);
-    } catch (error) {
-      console.log(error);
-      // logout();
-    }
+    await onRefreshToken(authSuccess, startRefreshTokenTimer);
   }
 
   function startRefreshTokenTimer(token) {
-    const expiredJWT = JSON.parse(atob(token.split(".")[1]));
-    console.log(expiredJWT);
-    const expire = new Date(expiredJWT.exp * 1000);
-    console.log(expire);
-    const timeout = expire.getTime() - new Date().getTime() - 10000;
-    timer = setTimeout(() => {
-      refreshToken();
-    }, timeout);
-    return timer;
+    return onStartRefreshToken(token, refreshToken, timer);
   }
   const ctx = {
     ...authState,

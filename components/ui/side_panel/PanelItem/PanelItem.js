@@ -8,7 +8,7 @@ import {
   Typography,
   CardActionArea,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import img from "../../../../public/images/d.jpg";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,7 +34,6 @@ function PanelItem(props) {
             <Grid container alignItems="center">
               <Grid item xs={3}>
                 <Avatar src={img.src} style={{ width: 75, height: 75 }} />
-                {/* <CardMedia image={String(img)} className={classes.media} /> */}
               </Grid>
               <Grid item xs={9}>
                 <Typography

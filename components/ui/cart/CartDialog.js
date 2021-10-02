@@ -14,8 +14,8 @@ import {
 import { useTheme } from "@material-ui/styles";
 import { Settings, CheckCircleOutline, Category } from "@material-ui/icons";
 
-import authCtx from "../../../ctxStore/auth_ctx";
-import cartCtx from "../../../ctxStore/cart_ctx";
+import authCtx from "../../../ctxStore/authCtx";
+import cartCtx from "../../../ctxStore/cartCtx";
 import { useHttp } from "../../../hooks/http";
 
 const CartDialog = ({ dialogValue, onShadowClick, style, productId }) => {

@@ -19,7 +19,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import mapSortProps from "../../../util/mapSortProps";
-import { doFilter } from "./dependencies/cardListSettings";
+import { filterUrl } from "./dependencies/cardListSettings";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -51,11 +51,11 @@ const CardListSettings = ({ totalResult, baseSortUrl }) => {
 
   const handleOrderChange = (e) => {
     const eventValue = e.target.value;
-    doFilter(sort, eventValue, baseSortUrl, router.push);
+    router.push(filterUrl(sort, eventValue, baseSortUrl));
   };
   const handleSortChange = (e) => {
     const eventValue = e.target.value;
-    doFilter(eventValue, "asc", baseSortUrl, router.push);
+    router.push(filterUrl(eventValue, "asc", baseSortUrl));
   };
   return (
     <Grid container alignItems="baseline" className={classes["mb-2"]}>

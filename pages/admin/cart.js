@@ -14,8 +14,8 @@ import { Alert } from "@material-ui/lab";
 import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner";
 import { useHttp } from "../../hooks/http";
 import CartItem from "../../components/ui/cart/CartItem";
-import cartCtx from "../../ctxStore/cart_ctx";
-import authCtx from "../../ctxStore/auth_ctx";
+import cartCtx from "../../ctxStore/cartCtx";
+import authCtx from "../../ctxStore/authCtx";
 
 const Cart = () => {
   const { data, sendRequest, reqExtra, loading } = useHttp();

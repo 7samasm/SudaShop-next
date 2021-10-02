@@ -27,7 +27,7 @@ export default NextAuth({
        * Return previous token if the access token has not expired yet
        * we subtract 10k ms to refresh token befor expire by 10 s
        */
-      if (new Date(new Date(token.accessTokenExpireDate) - 1000) > new Date())
+      if (new Date(new Date(token.accessTokenExpireDate) - 10000) > new Date())
         return token;
       // Access token has expired, try to update it
       const refreshedToken = await refreshAccessToken(token);

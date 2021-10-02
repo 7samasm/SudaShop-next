@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 import TheHeader from "./TheHeader";
 import { withHooks } from "jest-react-hooks-shallow";
 import callback from "./callback";
-import * as AuthContext from "../../../ctxStore/auth_ctx";
+import * as AuthContext from "../../../ctxStore/authCtx";
 import Link from "next/link";
 
 jest.mock("./callback", () => jest.fn());

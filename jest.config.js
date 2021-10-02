@@ -3,6 +3,7 @@ module.exports = {
     "**/*.{js,jsx,ts,tsx}",
     "!**/*.d.ts",
     "!**/node_modules/**",
+    "!**/.next/**",
   ],
   setupFilesAfterEnv: ["./jest.setup.js"],
   moduleNameMapper: {

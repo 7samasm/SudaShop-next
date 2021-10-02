@@ -19,9 +19,9 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import { Icon } from "@mdi/react";
 import { mdiLogin, mdiLogout } from "@mdi/js";
 import avatarImg from "../../../public/images/react.png";
-import { useDrawerContext } from "../../../ctxStore/drawer_ctx";
-import sectionsCtx from "../../../ctxStore/sections_ctx";
-import { useAuthContext } from "../../../ctxStore/auth_ctx";
+import { useDrawerContext } from "../../../ctxStore/drawerCtx";
+import sectionsCtx from "../../../ctxStore/sectionsCtx";
+import { useAuthContext } from "../../../ctxStore/authCtx";
 import callback from "./callback";
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -56,7 +56,8 @@ const TemporaryDrawer = React.memo(() => {
     console.log("%c [TheDrawer] 1st useEffect", "color:teal;font-size:20px");
   });
 
-  const closeDrawer = () => drawerContext.closeDrawer();
+  const closeDrawer = /* istanbul ignore next */ () =>
+    drawerContext.closeDrawer();
 
   const listTile = [
     {
@@ -129,9 +130,11 @@ const TemporaryDrawer = React.memo(() => {
         {listTile}
         <ListItem
           button
-          onClick={() => {
-            setIsCollapseOpen(!isCollapseOpen);
-          }}
+          onClick={
+            /* istanbul ignore next */ () => {
+              setIsCollapseOpen(!isCollapseOpen);
+            }
+          }
         >
           <ListItemIcon>
             <Category />
@@ -148,19 +151,21 @@ const TemporaryDrawer = React.memo(() => {
       </List>
       <Collapse in={isCollapseOpen}>
         <List>
-          {[...sectionsContext.sections].map((section) => (
-            <Link href={`/sections/${section.name}/1`} key={section._id}>
-              <ListItem
-                button
-                onClick={closeDrawer}
-                className={classes[`subList-${theme.direction}`]}
-              >
-                <ListItemText style={{ color: "#000" }}>
-                  {section.name}
-                </ListItemText>
-              </ListItem>
-            </Link>
-          ))}
+          {[...sectionsContext.sections].map(
+            /* istanbul ignore next */ (section) => (
+              <Link href={`/sections/${section.name}/1`} key={section._id}>
+                <ListItem
+                  button
+                  onClick={closeDrawer}
+                  className={classes[`subList-${theme.direction}`]}
+                >
+                  <ListItemText style={{ color: "#000" }}>
+                    {section.name}
+                  </ListItemText>
+                </ListItem>
+              </Link>
+            )
+          )}
         </List>
       </Collapse>
     </Drawer>

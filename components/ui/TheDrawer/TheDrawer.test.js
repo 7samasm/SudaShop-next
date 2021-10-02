@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { shallow } from "enzyme";
-import * as authCtx from "../../../ctxStore/auth_ctx";
+import * as authCtx from "../../../ctxStore/authCtx";
 import TheDrawer from "./TheDrawer";
 import { withHooks } from "jest-react-hooks-shallow";
 import callback from "./callback";

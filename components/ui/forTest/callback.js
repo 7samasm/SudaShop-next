@@ -1,2 +1,3 @@
-const callback = (param) => undefined;
+/* istanbul ignore next */
+const callback = (param) => param;
 export default callback;

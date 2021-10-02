@@ -38,7 +38,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch --verbose"
+    "test": "jest --watch --verbose",
+    "test:ce": "jest --coverage"
   },
   "eslintConfig": {
     "extends": [

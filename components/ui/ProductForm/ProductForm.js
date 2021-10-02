@@ -20,8 +20,8 @@ import { useRouter } from "next/router";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import CustomDialog from "../CustomDialog/CustomDialog";
 import { useHttp } from "../../../hooks/http";
-import sectionsCtx from "../../../ctxStore/sections_ctx";
-import authCtx from "../../../ctxStore/auth_ctx";
+import sectionsCtx from "../../../ctxStore/sectionsCtx";
+import authCtx from "../../../ctxStore/authCtx";
 
 const initDialogState = {
   open: false,

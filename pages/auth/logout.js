@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
-import authCtx from "../../ctxStore/auth_ctx";
+import authCtx from "../../ctxStore/authCtx";
 import { signOut } from "next-auth/client";
 
 export default function Logout() {

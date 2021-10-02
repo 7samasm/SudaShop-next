@@ -1,7 +1,7 @@
 import DefaultLayout from "../components/layout/DefaultLayout";
-import { SectionsProvider } from "../ctxStore/sections_ctx";
-import { AuthProvider } from "../ctxStore/auth_ctx";
-import { CartProvider } from "../ctxStore/cart_ctx";
+import { SectionsProvider } from "../ctxStore/sectionsCtx";
+import { AuthProvider } from "../ctxStore/authCtx";
+import { CartProvider } from "../ctxStore/cartCtx";
 
 function MyApp({ Component, pageProps }) {
   return (

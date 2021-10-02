@@ -1,5 +1,6 @@
 import { RadioGroup, Select } from "@material-ui/core";
-import { shallow } from "enzyme";
+import { mount, shallow } from "enzyme";
+import { withHooks } from "jest-react-hooks-shallow";
 import * as router from "next/router";
 import CardItem from "../../ui/CardItem/CardItem";
 import CardList from "./CardList";
@@ -8,39 +9,43 @@ import CartListWithSettingsAndPagination from "./CartListWithSettingsAndPaginati
 import * as cardListSettingsDependencies from "./dependencies/cardListSettings";
 
 describe("<CartListWithSettingsAndPagination/>", () => {
-  let spy, spyedDoFilter, CardListWSAP;
+  let spyedUseRouter, spyedFilterUrl, CardListWSAP;
+  let products = [];
+  beforeAll(() => {
+    for (let x = 1; x <= 13; x++) {
+      products.push({
+        _id: new Date(x).toISOString(),
+        title: `title ${x}`,
+        description: `desc ${x}`,
+        price: 100 * x,
+        imageUrl: "",
+        section: "",
+      });
+    }
+  });
+
   beforeEach(() => {
-    spy = jest.spyOn(router, "useRouter");
-    spy.mockImplementation(() => ({
+    spyedUseRouter = jest.spyOn(router, "useRouter");
+    spyedUseRouter.mockImplementation(() => ({
       query: {},
+      push: (url) => url,
     }));
 
-    spyedDoFilter = jest.spyOn(cardListSettingsDependencies, "doFilter");
-    spyedDoFilter.mockImplementation((arg1, arg2, arg3) => [arg1, arg2, arg3]);
+    spyedFilterUrl = jest.spyOn(cardListSettingsDependencies, "filterUrl");
+    // spyedFilterUrl.mockImplementation((arg1, arg2, arg3) => [arg1, arg2, arg3]);
 
     CardListWSAP = shallow(
-      <CartListWithSettingsAndPagination
-        products={[
-          {
-            _id: "",
-            title: "test",
-            description: "test",
-            price: 1000,
-            imageUrl: "",
-            section: "",
-          },
-        ]}
-      />
+      <CartListWithSettingsAndPagination products={products} />
     );
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-    spy.mockReset();
+    spyedUseRouter.mockReset();
   });
 
-  it("should render CardList > CartItem * 1 ", () => {
-    expect(CardListWSAP.find(CardList).dive().find(CardItem)).toHaveLength(1);
+  it("should render CardList > CartItem * 13 ", () => {
+    expect(CardListWSAP.find(CardList).dive().find(CardItem)).toHaveLength(13);
   });
 
   it("sould render CardListSettings * 1 if products.length > 1", () => {
@@ -58,7 +63,7 @@ describe("<CartListWithSettingsAndPagination/>", () => {
     cardListSettingsWrapper
       .find(Select)
       .simulate("change", { target: { value: "price" } });
-    expect(spyedDoFilter).toHaveReturnedWith(["price", "asc", "/sort/all"]);
+    expect(spyedFilterUrl).toHaveBeenCalledWith("price", "asc", "/sort/all");
   });
 
   it("<CardListSettings/> should collect expected data from radio buttons", () => {
@@ -67,7 +72,7 @@ describe("<CartListWithSettingsAndPagination/>", () => {
     cardListSettingsWrapper
       .find(RadioGroup)
       .simulate("change", { target: { value: "desc" } });
-    expect(spyedDoFilter).toHaveReturnedWith(["", "desc", "/sort/all"]);
+    expect(spyedFilterUrl).toHaveBeenCalledWith("", "desc", "/sort/all");
   });
 
   it("<Radio/> buttons should be disabeled if sort is empty string", () => {

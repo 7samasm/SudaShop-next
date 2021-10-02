@@ -1,4 +1,4 @@
-export const doFilter = (sort, order, baseSortUrl, push) => {
+export const filterUrl = (sort, order, baseSortUrl) => {
   const url = `${baseSortUrl}/${sort}/${order}/1`;
-  push(url);
+  return url;
 };

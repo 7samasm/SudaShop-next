@@ -9,13 +9,12 @@ import {
   LinearProgress,
 } from "@material-ui/core";
 
-import { getSession, signIn } from "next-auth/client";
-
 import { useHttp } from "../../hooks/http";
-import authCtx from "../../ctxStore/auth_ctx";
 import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner";
 import CustomDialog from "../../components/ui/CustomDialog/CustomDialog";
-import cartCtx from "../../ctxStore/cart_ctx";
+import authCtx from "../../ctxStore/authCtx";
+import cartCtx from "../../ctxStore/cartCtx";
+import { onLogin } from "./util/index.util";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -30,22 +29,13 @@ const Login = () => {
   const { data, loading, error, sendRequest } = useHttp();
 
   const login = async () => {
-    try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-      });
-      if (result.error) {
-        throw new Error(result.error);
-      }
-      const { accessToken, user } = await getSession();
-      authSuccess(accessToken, user.userId, user);
-      await getAndSetCart(accessToken);
-      startRefreshTokenTimer(accessToken);
-    } catch (error) {
-      console.log(error.message);
-    }
+    await onLogin(
+      email,
+      password,
+      authSuccess,
+      getAndSetCart,
+      startRefreshTokenTimer
+    );
   };
   return (
     <Grid container justifyContent="center">

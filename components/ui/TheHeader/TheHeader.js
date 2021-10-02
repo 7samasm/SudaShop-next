@@ -16,9 +16,9 @@ import WorkIcon from "@material-ui/icons/Work";
 import CartIcon from "@material-ui/icons/ShoppingCart";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import TheDrawer from "../../ui/TheDrawer/TheDrawer";
-import drawerCtx from "../../../ctxStore/drawer_ctx";
-import { useAuthContext } from "../../../ctxStore/auth_ctx";
-import cartCtx from "../../../ctxStore/cart_ctx";
+import drawerCtx from "../../../ctxStore/drawerCtx";
+import { useAuthContext } from "../../../ctxStore/authCtx";
+import cartCtx from "../../../ctxStore/cartCtx";
 import callback from "./callback";
 // import "./TheHeader.module.css";
 

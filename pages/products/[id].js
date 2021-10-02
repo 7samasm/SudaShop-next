@@ -23,7 +23,7 @@ import CommentsList from "../../components/ui/comments/CommentsList/CommentsList
 import PanelList from "../../components/ui/side_panel/PanelList/PanelList";
 import CartDialog from "../../components/ui/cart/CartDialog";
 import img from "../../public/images/d.jpg";
-import authCtx from "../../ctxStore/auth_ctx";
+import authCtx from "../../ctxStore/authCtx";
 
 const useStyles = makeStyles((theme) => {
   return {

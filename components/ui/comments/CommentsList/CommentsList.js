@@ -8,7 +8,7 @@ import { useHttp } from "../../../../hooks/http";
 import Comment from "../Comment/Comment";
 import AddComment from "../AddComment/AddComment";
 import LoadingSpinner from "../../LoadingSpinner/LoadingSpinner";
-import authCtx from "../../../../ctxStore/auth_ctx";
+import authCtx from "../../../../ctxStore/authCtx";
 
 const useStyles = makeStyles((theme) => {
   return {

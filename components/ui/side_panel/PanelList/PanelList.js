@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { Grid, Typography } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import PanelItem from "../PanelItem/PanelItem";
 

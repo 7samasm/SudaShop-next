@@ -4,7 +4,7 @@ import { Delete, Edit } from "@material-ui/icons";
 import { useRouter } from "next/router";
 
 import { useHttp } from "../../hooks/http";
-import authCtx from "../../ctxStore/auth_ctx";
+import authCtx from "../../ctxStore/authCtx";
 import CardList from "../../components/containers/CardList/CardList";
 import CardListSkeleton from "../../components/ui/Skeletons/CardListSkeleton";
 import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner";

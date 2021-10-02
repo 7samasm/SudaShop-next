@@ -3,10 +3,10 @@ import TheHeader from "../ui/TheHeader/TheHeader";
 import { Container, CssBaseline } from "@material-ui/core";
 import { useContext, useEffect } from "react";
 import { getSession } from "next-auth/client";
-import { DrawerProvider } from "../../ctxStore/drawer_ctx";
-import sectionsCtx from "../../ctxStore/sections_ctx";
-import authCtx from "../../ctxStore/auth_ctx";
-import cartCtx from "../../ctxStore/cart_ctx";
+import { DrawerProvider } from "../../ctxStore/drawerCtx";
+import sectionsCtx from "../../ctxStore/sectionsCtx";
+import authCtx from "../../ctxStore/authCtx";
+import cartCtx from "../../ctxStore/cartCtx";
 
 const theme = createTheme({
   palette: {
