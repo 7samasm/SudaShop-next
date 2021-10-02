@@ -6,13 +6,10 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import CardMedia from "@material-ui/core/CardMedia";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import img from "../../../public/images/d.jpg";
 
 const useStyles = makeStyles({
-  root: {
-    maxWidth: 345,
-  },
   media: {
     height: 115,
     backgroundSize: "contain",
@@ -20,7 +17,6 @@ const useStyles = makeStyles({
   },
   card: {
     borderRadius: "24px",
-    // padding: "10px 0",
   },
 });
 const CardItem = ({ item, render }) => {

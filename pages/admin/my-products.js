@@ -69,6 +69,7 @@ const MyProducts = () => {
         render={(item) => (
           <CardActions about="del and edit">
             <IconButton
+              component="div"
               onClick={(e) => {
                 e.preventDefault();
                 deleteBtnPressed(item._id, item.title);
@@ -78,6 +79,7 @@ const MyProducts = () => {
             </IconButton>
             <div style={{ flexGrow: 1 }}></div>
             <IconButton
+              component="div"
               onClick={(e) => {
                 e.preventDefault();
                 router.push(
