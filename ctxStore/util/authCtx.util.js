@@ -1,12 +1,11 @@
 import { getSession, signIn } from "next-auth/client";
+import { DECREASED_VALUE_MS } from "../../util/const";
 
 export function onStartRefreshToken(token, refreshToken, timer) {
   try {
-    const expiredJWT = JSON.parse(atob(token.split(".")[1]));
-    console.log(expiredJWT);
-    const expire = new Date(expiredJWT.exp * 1000);
-    console.log(expire);
-    const timeout = expire.getTime() - new Date().getTime() - 10000;
+    const { exp } = JSON.parse(atob(token.split(".")[1]));
+    const timeout = exp * 1000 - DECREASED_VALUE_MS - Date.now();
+    console.log(timeout);
     timer = setTimeout(() => {
       refreshToken();
     }, timeout);

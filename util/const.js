@@ -1,0 +1,1 @@
+export const DECREASED_VALUE_MS = 10000;

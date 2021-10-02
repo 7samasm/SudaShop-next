@@ -3,22 +3,30 @@ import { getSession } from "next-auth/client";
 import Providers from "next-auth/providers";
 import axiosBuilder from "../../../axios";
 import * as chalk from "chalk";
+import { DECREASED_VALUE_MS } from "../../../util/const";
 export default NextAuth({
   callbacks: {
+    // reform jwt
     async jwt(token, user) {
       console.log(chalk.yellow("[[jwt cb called ]]"));
+      /**
+       * user only found after call Authorize function
+       * when signIn for 1st time or called by refresh token timer
+       */
       if (user) {
         console.log(chalk.bgBlack.magenta("user found"));
         const userCopy = { ...user };
+        // remove unnesccery props
         ["refreshToken", "token", "tokenExpireIn"].forEach((el) => {
           delete userCopy[el];
         });
+        const { token, tokenExpireIn, refreshToken } = user;
         return {
-          accessToken: user.token,
+          accessToken: token,
           accessTokenExpireDate: new Date(
-            new Date(user.tokenExpireIn * 1000).getTime() + new Date().getTime()
-          ),
-          refreshToken: user.refreshToken,
+            Date.now() + tokenExpireIn * 1000
+          ).toISOString(),
+          refreshToken,
           user: userCopy,
           error: null,
         };
@@ -27,7 +35,10 @@ export default NextAuth({
        * Return previous token if the access token has not expired yet
        * we subtract 10k ms to refresh token befor expire by 10 s
        */
-      if (new Date(new Date(token.accessTokenExpireDate) - 10000) > new Date())
+      if (
+        Date.parse(token.accessTokenExpireDate) - DECREASED_VALUE_MS >
+        Date.now()
+      )
         return token;
       // Access token has expired, try to update it
       const refreshedToken = await refreshAccessToken(token);
