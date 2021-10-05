@@ -3,6 +3,8 @@ import * as authCtxUtil from "./authCtx.util";
 const accessToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSHVzc2FtIiwiaWQiOiI1ZjlmYzExN2Q2M2Y0ODBlOGZkYzdhMGUiLCJpYXQiOjE2MzMxODU1NzksImV4cCI6MTYzMzE4OTE3OX0.2V7XGh1P2FtV9Ro_49xTTF431MFIE7Dvx8zuzDQgceo";
 
+jest.useFakeTimers();
+
 describe("Auth Context", () => {
   let spyedOnRefreshToken, spyedOnStartRefreshToken;
   beforeEach(() => {
@@ -13,27 +15,41 @@ describe("Auth Context", () => {
 
   it("onStartRefreshToken() should work well", () => {
     const { onStartRefreshToken } = authCtxUtil;
-    const timer = onStartRefreshToken(accessToken, undefined, undefined);
-    expect(spyedOnStartRefreshToken).toHaveBeenCalled();
-    expect(spyedOnStartRefreshToken).toHaveBeenCalledTimes(1);
+    jest.spyOn(global, "setTimeout");
+    /**
+     * change implementaion of parse method to make it return object with exp prop
+     * that contain Date time > Date.now() by 1h (3600s)
+     */
+    JSON.parse = jest.fn(() => ({ exp: Date.now() / 1000 + 3600 }));
+    const mockedRefreshToken = jest.fn();
+
+    let timer = onStartRefreshToken(accessToken, mockedRefreshToken, undefined);
+
+    // exp > Date.now()
     expect(timer).toBeTruthy();
+    expect(setTimeout).toBeCalledTimes(1);
+    // should called with timeout's callback func and (1 hour - 10s) duration
+    expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 3590000);
+    jest.runOnlyPendingTimers();
+    expect(mockedRefreshToken).toHaveBeenCalledTimes(1);
+    // exp < Date.now
+    JSON.parse = jest.fn(() => ({ exp: 1 }));
+    timer = onStartRefreshToken(accessToken, undefined, undefined);
+    expect(timer).toBe(undefined);
   });
 
   it("onRefreshToken() should work well", async () => {
     const { onRefreshToken } = authCtxUtil;
-    const authSuccessSimulate = jest
-      .fn()
-      .mockImplementation((arg1, arg2) => [arg1, arg2]);
-    const startRefreshTokenTimerSimulate = jest.fn();
-    await onRefreshToken(authSuccessSimulate, startRefreshTokenTimerSimulate);
+    const mockedAuthSuccess = jest.fn();
+    const mockedStartRefreshTokenTimer = jest.fn();
+    await onRefreshToken(mockedAuthSuccess, mockedStartRefreshTokenTimer);
     expect(spyedOnRefreshToken).toHaveBeenCalled();
-    expect(authSuccessSimulate).toHaveBeenCalled();
-    expect(authSuccessSimulate).toHaveBeenCalledWith(accessToken, "9292", {
+    expect(mockedAuthSuccess).toHaveBeenCalled();
+    expect(mockedAuthSuccess).toHaveBeenCalledWith(accessToken, "9292", {
       name: "hussam",
       userId: "9292",
     });
-    expect(authSuccessSimulate).toHaveReturnedWith([accessToken, "9292"]);
-    expect(startRefreshTokenTimerSimulate).toHaveBeenCalled();
-    expect(startRefreshTokenTimerSimulate).toHaveBeenCalledWith(accessToken);
+    expect(mockedStartRefreshTokenTimer).toHaveBeenCalled();
+    expect(mockedStartRefreshTokenTimer).toHaveBeenCalledWith(accessToken);
   });
 });

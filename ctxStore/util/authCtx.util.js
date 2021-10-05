@@ -2,18 +2,17 @@ import { getSession, signIn } from "next-auth/client";
 import { DECREASED_VALUE_MS } from "../../util/const";
 
 export function onStartRefreshToken(token, refreshToken, timer) {
-  try {
-    const { exp } = JSON.parse(atob(token.split(".")[1]));
-    const timeout = exp * 1000 - DECREASED_VALUE_MS - Date.now();
+  const { exp } = JSON.parse(atob(token.split(".")[1]));
+  const expiryTimeDecreasedByTenSeconds = exp * 1000 - DECREASED_VALUE_MS;
+  if (expiryTimeDecreasedByTenSeconds > Date.now()) {
+    const timeout = expiryTimeDecreasedByTenSeconds - Date.now();
     console.log(timeout);
     timer = setTimeout(() => {
-      refreshToken();
+      // make sure the param refreshToken is a func before excute it
+      typeof refreshToken === "function" && refreshToken();
     }, timeout);
-    return timer;
-  } catch (error) {
-    console.log(error);
-    throw new Error(error);
   }
+  return timer;
 }
 
 export async function onRefreshToken(authSuccess, startRefreshTokenTimer) {

@@ -16,6 +16,7 @@ import { useHttp } from "../../hooks/http";
 import CartItem from "../../components/ui/cart/CartItem";
 import cartCtx from "../../ctxStore/cartCtx";
 import authCtx from "../../ctxStore/authCtx";
+import { reCalculateCartDataForDeletion } from "./util/cart.uitl";
 
 const Cart = () => {
   const { data, sendRequest, reqExtra, loading } = useHttp();
@@ -23,25 +24,24 @@ const Cart = () => {
   const { token } = useContext(authCtx);
 
   useEffect(() => {
-    // console.log(data);
     if (data) {
-      const filteredCartItems = products.filter(
-        (cartItem) => cartItem._id !== reqExtra
+      const cartData = reCalculateCartDataForDeletion(
+        products,
+        reqExtra,
+        totalItems,
+        totalPrice
       );
-      const currItems = products.find((cartItem) => cartItem._id === reqExtra);
-      // console.log(`%c ${currItems}`, "color:teal;font-size:18px;");
-      if (currItems) {
-        const total = totalItems - currItems.quantity;
-        const calcTotalPrice =
-          totalPrice - currItems.quantity * currItems.price;
-        setCart({
-          products: filteredCartItems,
-          totalPrice: calcTotalPrice,
-          totalItems: total,
-        });
-      }
+      cartData && setCart(cartData);
     }
-  }, [data, reqExtra, setCart, products, totalItems, totalPrice]);
+  }, [
+    data,
+    reqExtra,
+    setCart,
+    reCalculateCartDataForDeletion,
+    products,
+    totalItems,
+    totalPrice,
+  ]);
 
   const deleteCartItem = (productId) => {
     sendRequest(
