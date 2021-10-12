@@ -21,7 +21,7 @@ describe("<TheHeader/>", () => {
   });
 
   it("should render auth-requierd parts if user authenticeted ", () => {
-    const spy = jest.spyOn(AuthContext, "useAuthContext");
+    const spy = jest.spyOn<any, any>(AuthContext, "useAuthContext");
     spy.mockImplementation(() => ({
       isLoggedIn: true,
     }));
@@ -36,7 +36,7 @@ describe("<TheHeader/>", () => {
   });
 
   it("should't render auth-requierd parts if user unauthenticeted ", () => {
-    const spy = jest.spyOn(AuthContext, "useAuthContext");
+    const spy = jest.spyOn<any, any>(AuthContext, "useAuthContext");
     spy.mockImplementation(() => ({
       isLoggedIn: false,
     }));

@@ -6,7 +6,8 @@ const accessToken =
 jest.useFakeTimers();
 
 describe("Auth Context", () => {
-  let spyedOnRefreshToken, spyedOnStartRefreshToken;
+  let spyedOnRefreshToken: jest.SpyInstance,
+    spyedOnStartRefreshToken: jest.SpyInstance;
   beforeEach(() => {
     jest.clearAllMocks();
     spyedOnStartRefreshToken = jest.spyOn(authCtxUtil, "onStartRefreshToken");
@@ -23,19 +24,27 @@ describe("Auth Context", () => {
     JSON.parse = jest.fn(() => ({ exp: Date.now() / 1000 + 3600 }));
     const mockedRefreshToken = jest.fn();
 
-    let timer = onStartRefreshToken(accessToken, mockedRefreshToken, undefined);
+    let timer = onStartRefreshToken(
+      accessToken,
+      mockedRefreshToken,
+      setTimeout(() => {})
+    );
 
     // exp > Date.now()
     expect(timer).toBeTruthy();
-    expect(setTimeout).toBeCalledTimes(1);
+    expect(setTimeout).toBeCalledTimes(2);
     // should called with timeout's callback func and (1 hour - 10s) duration
     expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 3590000);
     jest.runOnlyPendingTimers();
     expect(mockedRefreshToken).toHaveBeenCalledTimes(1);
     // exp < Date.now
     JSON.parse = jest.fn(() => ({ exp: 1 }));
-    timer = onStartRefreshToken(accessToken, undefined, undefined);
-    expect(timer).toBe(undefined);
+    timer = onStartRefreshToken(
+      accessToken,
+      () => {},
+      setTimeout(() => {})
+    );
+    expect(timer).toBe(3);
   });
 
   it("onRefreshToken() should work well", async () => {

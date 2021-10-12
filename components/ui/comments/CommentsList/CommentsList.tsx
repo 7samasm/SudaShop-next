@@ -46,7 +46,10 @@ const CommentsList = ({
   useEffect(() => {
     console.log("%c [CommentsList useEffect 2nd]", "color:#7b4bbb;");
     if (!loading && reqIdentifier === "ADD_COMMENT") {
-      setExtendedComments((oldCommentState) => [...oldCommentState, data]);
+      setExtendedComments((oldCommentState) => [
+        ...oldCommentState,
+        data as IComment,
+      ]);
     } else if (!loading && reqIdentifier === "DELETE_COMMENT") {
       setExtendedComments((oldCommentState) =>
         oldCommentState.filter((el) => el._id !== reqExtra)
@@ -64,9 +67,9 @@ const CommentsList = ({
       "admin/comment",
       "post",
       commentPyload,
-      null,
+      undefined,
       "ADD_COMMENT",
-      token
+      token!
     );
   };
 
@@ -77,7 +80,7 @@ const CommentsList = ({
       { productId, commentId },
       commentId,
       "DELETE_COMMENT",
-      token
+      token!
     );
   };
 

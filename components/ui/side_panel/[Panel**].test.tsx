@@ -1,10 +1,10 @@
 import { Typography } from "@material-ui/core";
-import { shallow } from "enzyme";
+import { shallow, ShallowWrapper } from "enzyme";
 import PanelItem from "./PanelItem/PanelItem";
 import PanelList from "./PanelList/PanelList";
 
 describe("<PanelList/>", () => {
-  let panelListWrapper;
+  let panelListWrapper: ShallowWrapper;
   beforeEach(() => {
     panelListWrapper = shallow(
       <PanelList

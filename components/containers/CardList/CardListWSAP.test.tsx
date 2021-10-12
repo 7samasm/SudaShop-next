@@ -1,7 +1,8 @@
 import { RadioGroup, Select } from "@material-ui/core";
-import { mount, shallow } from "enzyme";
-import { withHooks } from "jest-react-hooks-shallow";
+import { shallow, ShallowWrapper } from "enzyme";
 import * as router from "next/router";
+import { ChangeEvent } from "react";
+import { IProduct } from "../../../types/Product";
 import CardItem from "../../ui/CardItem/CardItem";
 import CardList from "./CardList";
 import CardListSettings from "./CardListSettings";
@@ -9,8 +10,10 @@ import CartListWithSettingsAndPagination from "./CartListWithSettingsAndPaginati
 import * as cardListSettingsDependencies from "./dependencies/cardListSettings";
 
 describe("<CartListWithSettingsAndPagination/>", () => {
-  let spyedUseRouter, spyedFilterUrl, CardListWSAP;
-  let products = [];
+  let spyedUseRouter: jest.SpyInstance,
+    spyedFilterUrl: jest.SpyInstance,
+    CardListWSAP: ShallowWrapper;
+  let products: IProduct[] = [];
   beforeAll(() => {
     for (let x = 1; x <= 13; x++) {
       products.push({
@@ -28,14 +31,22 @@ describe("<CartListWithSettingsAndPagination/>", () => {
     spyedUseRouter = jest.spyOn(router, "useRouter");
     spyedUseRouter.mockImplementation(() => ({
       query: {},
-      push: (url) => url,
+      push: (url: string) => url,
     }));
 
     spyedFilterUrl = jest.spyOn(cardListSettingsDependencies, "filterUrl");
     // spyedFilterUrl.mockImplementation((arg1, arg2, arg3) => [arg1, arg2, arg3]);
 
     CardListWSAP = shallow(
-      <CartListWithSettingsAndPagination products={products} />
+      <CartListWithSettingsAndPagination
+        products={products}
+        totalResult={0}
+        totalPages={0}
+        onPaginationChange={function (e: ChangeEvent<any>, page: number): void {
+          throw new Error("Function not implemented.");
+        }}
+        baseSortUrl=""
+      />
     );
   });
 

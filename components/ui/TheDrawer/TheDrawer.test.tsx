@@ -19,7 +19,7 @@ describe("<TheDrawer/>", () => {
   });
 
   it("should render auth-requierd parts if user authenticeted", () => {
-    const spy = jest.spyOn(authCtx, "useAuthContext");
+    const spy = jest.spyOn<any, any>(authCtx, "useAuthContext");
     spy.mockImplementation(() => ({
       isLoggedIn: true,
     }));
@@ -33,7 +33,7 @@ describe("<TheDrawer/>", () => {
   });
 
   it("should't render auth-requierd parts if user unauthenticeted", () => {
-    const spy = jest.spyOn(authCtx, "useAuthContext");
+    const spy = jest.spyOn<any, any>(authCtx, "useAuthContext");
     spy.mockImplementation(() => ({
       isLoggedIn: false,
     }));
