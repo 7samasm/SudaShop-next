@@ -16,14 +16,11 @@ const theme = createTheme({
     secondary: {
       main: "#e91e63",
     },
-    default: {
-      main: "#fffff",
-    },
   },
   direction: "ltr",
 });
 
-export default function DefaultLayout(props) {
+export default function DefaultLayout(props: { children: JSX.Element }) {
   const { loadSections } = useContext(sectionsCtx);
   const { authSuccess, startRefreshTokenTimer } = useContext(authCtx);
   const { getAndSetCart } = useContext(cartCtx);
@@ -32,13 +29,17 @@ export default function DefaultLayout(props) {
       await loadSections();
       const session = await getSession();
       if (session) {
-        const { accessToken, user, error } = session;
+        const { accessToken, user, error } = session as {
+          accessToken: string;
+          user: any;
+          error: any;
+        };
         if (error) {
           throw new Error(error);
         }
         authSuccess(accessToken, user.userId, user);
         await getAndSetCart(accessToken);
-        startRefreshTokenTimer(accessToken);
+        return startRefreshTokenTimer(accessToken);
       }
     } catch (error) {
       throw error;
@@ -50,9 +51,9 @@ export default function DefaultLayout(props) {
       .then((timer) => {
         const jssStyles = document.querySelector("#jss-server-side");
         if (jssStyles) {
-          jssStyles.parentElement.removeChild(jssStyles);
+          jssStyles.parentElement!.removeChild(jssStyles);
         }
-        return () => clearTimeout(timer);
+        if (timer) return () => clearTimeout(timer);
       })
       .catch((e) => {
         console.log(e);

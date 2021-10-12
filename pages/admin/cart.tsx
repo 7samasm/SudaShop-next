@@ -25,9 +25,10 @@ const Cart = () => {
 
   useEffect(() => {
     if (data) {
+      console.log("l*******l", data);
       const cartData = reCalculateCartDataForDeletion(
-        products,
-        reqExtra,
+        products!,
+        reqExtra!,
         totalItems,
         totalPrice
       );
@@ -47,10 +48,10 @@ const Cart = () => {
     sendRequest(
       `/admin/cart/${productId}`,
       "delete",
-      null,
+      undefined,
       productId,
-      null,
-      token
+      undefined,
+      token!
     );
   };
   const transformedCartItems = products?.map(

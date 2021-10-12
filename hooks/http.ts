@@ -1,6 +1,15 @@
 import { useCallback, useReducer } from "react";
 import axios from "../axios";
-const initState = {
+import { updateObject } from "../util/updateObject";
+
+type HttpState = {
+  loading: boolean;
+  data: null | {};
+  error?: null | {};
+  extra?: null | string;
+  identifier?: null | string;
+};
+const initState: HttpState = {
   loading: false,
   error: null,
   data: null,
@@ -8,8 +17,20 @@ const initState = {
   identifier: null,
 };
 const httpReducer = (
-  currentHttpState,
-  { type, identifier, data, extra, error }
+  currentHttpState: HttpState,
+  {
+    type,
+    identifier,
+    data,
+    extra,
+    error,
+  }: {
+    type: string;
+    identifier?: string;
+    data?: {};
+    extra?: string;
+    error?: {};
+  }
 ) => {
   switch (type) {
     case "SEND":
@@ -20,12 +41,12 @@ const httpReducer = (
         identifier,
       };
     case "RESPONSE":
-      return {
-        ...currentHttpState,
+      return updateObject(currentHttpState, {
         loading: false,
-        data,
+        data: data!,
         extra,
-      };
+      });
+
     case "ERROR":
       return {
         ...currentHttpState,
@@ -40,14 +61,14 @@ export const useHttp = () => {
   const [httpState, httpDispatch] = useReducer(httpReducer, initState);
   const sendRequest = useCallback(
     (
-      url,
-      method,
-      body = null,
-      extra = null,
-      identifier = null,
-      token = null
+      url: string,
+      method: string,
+      body?: {},
+      extra?: string,
+      identifier?: string,
+      token?: string
     ) => {
-      httpDispatch({ type: "SEND", identifier });
+      httpDispatch({ type: "SEND", identifier: identifier! });
       setTimeout(async () => {
         let data;
         try {
@@ -55,12 +76,12 @@ export const useHttp = () => {
             data = (await axios(token).get(url)).data;
           } else {
             // post || put || delete
-            data = (await axios(token)[method](url, body)).data;
+            data = (
+              await axios(token)[method as "post" | "put" | "delete"](url, body)
+            ).data;
           }
           httpDispatch({ type: "RESPONSE", data, extra });
-          console.log(data);
-          console.log("done");
-        } catch (e) {
+        } catch (e: any) {
           console.dir(e);
           httpDispatch({ type: "ERROR", error: e.message });
         }

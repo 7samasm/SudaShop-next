@@ -1,10 +1,13 @@
+import ICart from "../../../types/Cart";
+import { IProduct } from "../../../types/Product";
+
 export function reCalculateCartDataForDeletion(
-  cartProducts,
-  deletedId,
-  totalItems,
-  totalPrice
+  cartProducts: IProduct[],
+  deletedId: string,
+  totalItems: number,
+  totalPrice: number
 ) {
-  let data = null;
+  let data: ICart | null = null;
   const deletedCartProduct = cartProducts.find(
     (cartProduct) => cartProduct._id === deletedId
   );
@@ -13,9 +16,9 @@ export function reCalculateCartDataForDeletion(
     const filteredCartItems = cartProducts.filter(
       (cartProduct) => cartProduct._id !== deletedId
     );
-    const total = totalItems - deletedCartProduct.quantity;
+    const total = totalItems - deletedCartProduct.quantity!;
     const calcTotalPrice =
-      totalPrice - deletedCartProduct.quantity * deletedCartProduct.price;
+      totalPrice - deletedCartProduct.quantity! * deletedCartProduct.price;
     data = {
       products: filteredCartItems,
       totalPrice: calcTotalPrice,

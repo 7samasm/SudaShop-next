@@ -46,7 +46,7 @@ const authReducer = (
   }
 };
 
-var timer: any;
+var timer: NodeJS.Timeout;
 
 const authCtx = createContext<{
   token: string | null;
@@ -55,14 +55,16 @@ const authCtx = createContext<{
   isLoggedIn: boolean;
   authSuccess: (token: string, userId: string, user: any) => void;
   refreshToken: () => Promise<void>;
-  startRefreshTokenTimer: (token: string) => any;
+  startRefreshTokenTimer: (token: string) => NodeJS.Timeout;
   logout: () => void;
 }>({
   ...initState,
   isLoggedIn: false,
   authSuccess() {},
   async refreshToken() {},
-  startRefreshTokenTimer(token) {},
+  startRefreshTokenTimer(token) {
+    return setTimeout(() => {}, 2000);
+  },
   logout() {},
 });
 
