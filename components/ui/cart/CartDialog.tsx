@@ -24,6 +24,7 @@ import { Settings, CheckCircleOutline, Category } from "@material-ui/icons";
 import authCtx from "../../../ctxStore/authCtx";
 import cartCtx from "../../../ctxStore/cartCtx";
 import { useHttp } from "../../../hooks/http";
+import { IProduct } from "../../../types/Product";
 
 const CartDialog = ({
   dialogValue,
@@ -41,17 +42,18 @@ const CartDialog = ({
   );
   const theme = useTheme();
   const quantityInput = useRef<any>("");
-  const { data, sendRequest } = useHttp();
+  const { data, sendRequest } =
+    useHttp<[{ productId: IProduct; quantity: number }]>();
   const { token } = useContext(authCtx);
   const { setCart } = useContext(cartCtx);
 
   useEffect(() => {
-    if (data) {
+    if (data && Array.isArray(data)) {
       console.log(data);
-      let products: any[] = [];
+      let products: IProduct[] = [];
       let totalItems = 0;
       let totalPrice = 0;
-      data.forEach((el: any, i: any) => {
+      data.forEach((el) => {
         products.push({ ...el.productId, quantity: el.quantity });
         totalItems += el.quantity;
         totalPrice += el.quantity * el.productId.price;
@@ -79,9 +81,9 @@ const CartDialog = ({
       "/admin/cart",
       "post",
       { productId, quantity },
-      null,
-      null,
-      token
+      undefined,
+      undefined,
+      token!
     );
     // console.log(quantityInput.current.value);
   };

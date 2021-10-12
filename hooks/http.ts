@@ -4,8 +4,8 @@ import { updateObject } from "../util/updateObject";
 
 type HttpState = {
   loading: boolean;
-  data: null | {};
-  error?: null | {};
+  data: null | {} | any[];
+  error?: null | string;
   extra?: null | string;
   identifier?: null | string;
 };
@@ -29,7 +29,7 @@ const httpReducer = (
     identifier?: string;
     data?: {};
     extra?: string;
-    error?: {};
+    error?: string;
   }
 ) => {
   switch (type) {
@@ -57,7 +57,7 @@ const httpReducer = (
       throw new Error("should n`t be there");
   }
 };
-export const useHttp = () => {
+export const useHttp = <T = any>() => {
   const [httpState, httpDispatch] = useReducer(httpReducer, initState);
   const sendRequest = useCallback(
     (
@@ -93,7 +93,7 @@ export const useHttp = () => {
   return {
     loading: httpState.loading,
     error: httpState.error,
-    data: httpState.data,
+    data: httpState.data as T | null,
     reqExtra: httpState.extra,
     reqIdentifier: httpState.identifier,
     sendRequest,

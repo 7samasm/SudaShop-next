@@ -9,10 +9,11 @@ import CardList from "../../components/containers/CardList/CardList";
 import CardListSkeleton from "../../components/ui/Skeletons/CardListSkeleton";
 import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner";
 import CustomDialog from "../../components/ui/CustomDialog/CustomDialog";
+import { IProduct } from "../../types/Product";
 
 const MyProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [productIdToDelete, setProductIdToDelete] = useState(null);
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [productIdToDelete, setProductIdToDelete] = useState("");
   const [dialog, setDialog] = useState(false);
   const [dialogText, setDialogText] = useState("");
   const { data, loading, reqIdentifier, reqExtra, sendRequest } = useHttp();
@@ -29,19 +30,26 @@ const MyProducts = () => {
       sendRequest(
         "admin/products",
         "get",
-        null,
-        null,
+        undefined,
+        undefined,
         "FETCH_PRODUCTS_AGAIN",
-        token
+        token!
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, reqIdentifier, reqExtra, setProducts]);
   useEffect(() => {
     if (token)
-      sendRequest("admin/products", "get", null, null, "FETCH_PRODUCTS", token);
+      sendRequest(
+        "admin/products",
+        "get",
+        undefined,
+        undefined,
+        "FETCH_PRODUCTS",
+        token!
+      );
   }, [sendRequest, token]);
 
-  const deleteBtnPressed = (productId, title) => {
+  const deleteBtnPressed = (productId: string, title: string) => {
     setDialogText(`do you really want to delete ${title} ?`);
     setDialog(true);
     setProductIdToDelete(productId);
@@ -55,7 +63,7 @@ const MyProducts = () => {
       { productId: productIdToDelete },
       productIdToDelete,
       "DEL_PRODUCT",
-      token
+      token!
     );
   };
 
@@ -65,14 +73,13 @@ const MyProducts = () => {
     reqIdentifier === "FETCH_PRODUCTS_AGAIN" ? (
       <CardList
         products={products}
-        totalResult={data?.totalDocs || 0}
-        render={(item) => (
+        render={(item: IProduct) => (
           <CardActions about="del and edit">
             <IconButton
               component="div"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
-                deleteBtnPressed(item._id, item.title);
+                deleteBtnPressed(item._id!, item.title);
               }}
             >
               <Delete color="action" />
@@ -80,7 +87,7 @@ const MyProducts = () => {
             <div style={{ flexGrow: 1 }}></div>
             <IconButton
               component="div"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
                 router.push(
                   `/admin/edit-product?productId=${item._id}`,

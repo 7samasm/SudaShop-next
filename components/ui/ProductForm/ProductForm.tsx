@@ -43,7 +43,8 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
     dialogReducer,
     initDialogState
   );
-  const { data, sendRequest, loading, reqIdentifier, error } = useHttp();
+  const { data, sendRequest, loading, reqIdentifier, error } =
+    useHttp<IProduct>();
 
   useEffect(() => {
     if (error) {
@@ -67,7 +68,7 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
       setTitle(title);
       setDescription(description);
       setSection(section);
-      setPrice(price);
+      setPrice(price + "");
     }
   }, [data, reqIdentifier, error]);
 
@@ -78,10 +79,10 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
       sendRequest(
         `admin/products/${productId}`,
         "get",
-        null,
-        null,
+        undefined,
+        undefined,
         "FETCH_PRODUCT",
-        token
+        token!
       );
     }
     // listen to token cause re-render so was removed from array deps
@@ -135,7 +136,7 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
       identifier = "EDIT_PRODUCT";
       formData.append("productId", productId);
     }
-    sendRequest(url, method, formData, null, identifier, token);
+    sendRequest(url, method, formData, undefined, identifier, token!);
   };
 
   const changeTitle = (
@@ -159,7 +160,7 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
         text={dialogState.text}
         onLastButtonClicked={lastButtonClicked}
         onFirstButtonClicked={firstButtonClicked}
-        hideFirstButton={editable || error}
+        hideFirstButton={editable || error ? true : false}
       />
       {loading && <LinearProgress color={colorTheme} />}
       <Card>

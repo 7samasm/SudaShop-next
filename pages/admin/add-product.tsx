@@ -10,7 +10,7 @@ export default class AddItem extends Component {
     return (
       <Grid container justifyContent="center">
         <Grid item lg={6}>
-          <ProductForm history={this.props.history} />
+          <ProductForm />
         </Grid>
       </Grid>
     );

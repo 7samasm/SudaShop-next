@@ -27,7 +27,7 @@ const usePage = (endpointUrl: string) => {
   }, [sendRequest, router, endpointUrl]);
 
   const handlePaginationChange = (url: string) => {
-    return (event: ChangeEvent, page: string) => {
+    return (event: ChangeEvent, page: number) => {
       router.push(`${url}/${page}`);
     };
   };
@@ -38,7 +38,7 @@ export const handlePaginationChange = (
   url: string,
   routerPushMethodPointer: Function
 ) => {
-  return (event: ChangeEvent, page: string) => {
+  return (event: ChangeEvent, page: number) => {
     routerPushMethodPointer(`${url}/${page}`);
   };
 };
