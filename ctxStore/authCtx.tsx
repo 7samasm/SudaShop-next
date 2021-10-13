@@ -1,4 +1,5 @@
 import { createContext, useReducer, useContext, FC } from "react";
+import IUser from "../types/User";
 import { updateObject } from "../util/updateObject";
 import { onRefreshToken, onStartRefreshToken } from "./util/authCtx.util";
 
@@ -11,7 +12,7 @@ const initState = {
 interface IState {
   token: string | null;
   userId: string | null;
-  user: { [k: string]: string } | null;
+  user: IUser | null;
 }
 
 const authReducer = (
@@ -25,7 +26,7 @@ const authReducer = (
     type: string;
     token?: string;
     userId?: string;
-    user?: { [k: string]: string };
+    user?: IUser;
   }
 ) => {
   switch (type) {

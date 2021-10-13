@@ -1,10 +1,7 @@
-// key={comment._id}
-// comment={comment.commentText}
-// createdBy={comment.userId.name}
-// createdAt={comment.createdAt}
+import IUser from "./User";
 export interface IComment {
-  _id: any;
+  _id: string;
   commentText: string;
-  userId: any;
-  createdAt: any;
+  userId: string | IUser;
+  createdAt: string;
 }

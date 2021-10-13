@@ -20,7 +20,10 @@ const useStyles = makeStyles({
     borderRadius: "24px",
   },
 });
-const CardItem = ({ item, render }: { item: IProduct; render: Function }) => {
+const CardItem: React.FC<{ item: IProduct; render: Function }> = ({
+  item,
+  render,
+}) => {
   const classes = useStyles();
   return (
     <Card elevation={5} className={classes.card}>

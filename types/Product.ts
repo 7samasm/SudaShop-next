@@ -1,9 +1,15 @@
+import { IComment } from "./Comment";
+import IUser from "./User";
+
 export interface IProduct {
-  _id?: string;
   title: string;
   description: string;
   price: number;
   imageUrl: string;
   section: string;
+  _id?: string;
+  createdAt?: string;
+  comments?: IComment[] | string;
+  userId?: IUser | string;
   quantity?: number;
 }

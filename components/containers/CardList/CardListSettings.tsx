@@ -29,13 +29,10 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const CardListSettings = ({
-  totalResult,
-  baseSortUrl,
-}: {
+const CardListSettings: React.FC<{
   totalResult: number;
   baseSortUrl: string;
-}) => {
+}> = ({ totalResult, baseSortUrl }) => {
   const router = useRouter();
   const [sort, setSort] = useState("");
   const [order, setOrder] = useState("asc");

@@ -6,7 +6,7 @@ import { Pagination } from "@material-ui/lab";
 import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { IProduct } from "../../../types/Product";
-import { ChangeEvent } from "react";
+import { ChangeEvent, FC } from "react";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -16,18 +16,20 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const CartListWithSettingsAndPagination = ({
-  products,
-  totalResult,
-  totalPages,
-  onPaginationChange,
-  baseSortUrl,
-}: {
+type TCLWSAPProps = {
   products: IProduct[];
   totalResult: number;
   totalPages: number;
   onPaginationChange(e: ChangeEvent<any>, page: number): void;
   baseSortUrl: string;
+};
+
+const CartListWithSettingsAndPagination: FC<TCLWSAPProps> = ({
+  products,
+  totalResult,
+  totalPages,
+  onPaginationChange,
+  baseSortUrl,
 }) => {
   const classes = useStyles();
   const router = useRouter();

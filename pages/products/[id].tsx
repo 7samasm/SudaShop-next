@@ -26,6 +26,9 @@ import img from "../../public/images/d.jpg";
 import authCtx from "../../ctxStore/authCtx";
 import { GetServerSideProps } from "next";
 import IParams from "../../types/extended/Params";
+import { IProduct } from "../../types/Product";
+import IUser from "../../types/User";
+import { IComment } from "../../types/Comment";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -51,21 +54,25 @@ const useStyles = makeStyles((theme) => {
       padding: "0 12PX",
     },
     changeItemOrderOnMobile: {
-      [theme.breakpoints.down("md")]: {
-        order: 2,
+      [theme.breakpoints.down("sm")]: {
+        order: 1,
       },
     },
   };
 });
 
-export default function ProductOverView({ postState }: { postState: any }) {
+export default function ProductOverView({
+  postState,
+}: {
+  postState: IProduct;
+}) {
   const classes = useStyles();
   const [dialogValue, setDialogValue] = useState(false);
   const { isLoggedIn, userId } = useContext(authCtx);
   const InfoOnChips = () => {
     const mapDataOnChips = [
       { name: `${postState.price} SDG`, icon: Money },
-      { name: postState.userId.name, icon: Person },
+      { name: (postState.userId as IUser).name, icon: Person },
       { name: "khartoum", icon: LocationCity },
       { name: postState?.section, icon: Category },
     ].map((el) => (
@@ -139,8 +146,7 @@ export default function ProductOverView({ postState }: { postState: any }) {
             <CartDialog
               dialogValue={dialogValue}
               onShadowClick={toggleDialogValue}
-              productId={postState._id}
-              style={{}}
+              productId={postState._id as string}
             />
             <Grid container direction="column">
               <Grid item className="mb-2">
@@ -154,7 +160,7 @@ export default function ProductOverView({ postState }: { postState: any }) {
                   </Typography>
                 </CardContent>
               </Grid>
-              {isLoggedIn && userId !== postState.userId._id && (
+              {isLoggedIn && userId !== (postState.userId as IUser)._id && (
                 <Grid item className={classes["align-self-center"]}>
                   <Button
                     color="secondary"
@@ -168,8 +174,8 @@ export default function ProductOverView({ postState }: { postState: any }) {
             </Grid>
           </Card>
           <CommentsList
-            comments={postState.comments}
-            productId={postState._id}
+            comments={postState.comments as IComment[]}
+            productId={postState._id as string}
           />
         </Grid>
         {/* post-comment  end */}
@@ -180,7 +186,7 @@ export default function ProductOverView({ postState }: { postState: any }) {
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { id } = params as IParams;
-  const { data } = await Axios().get(`products/${id}`);
+  const { data } = await Axios().get<IProduct>(`products/${id}`);
 
   return {
     props: {

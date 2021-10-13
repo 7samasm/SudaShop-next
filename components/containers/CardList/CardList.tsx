@@ -6,13 +6,10 @@ import { useTheme } from "@material-ui/core/styles";
 
 import CardItem from "../../ui/CardItem/CardItem";
 import { IProduct } from "../../../types/Product";
-const CardList = ({
-  products,
-  render,
-}: {
+const CardList: React.FC<{
   products: IProduct[];
   render?: Function;
-}) => {
+}> = ({ products, render }) => {
   const theme = useTheme();
   const listDirection = theme.direction === "ltr" ? "row" : "row-reverse";
   const renderCardsOrAlert =
@@ -46,6 +43,7 @@ const CardList = ({
 
 CardList.propTypes = {
   products: PropTypes.array.isRequired,
+  render: PropTypes.func,
 };
 
 export default CardList;

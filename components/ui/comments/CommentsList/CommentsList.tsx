@@ -22,13 +22,10 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const CommentsList = ({
-  comments,
-  productId,
-}: {
+const CommentsList: React.FC<{
   comments: IComment[];
   productId: string;
-}) => {
+}> = ({ comments, productId }) => {
   const [extendedComments, setExtendedComments] = useState(comments);
 
   const classes = useStyles();
@@ -46,10 +43,7 @@ const CommentsList = ({
   useEffect(() => {
     console.log("%c [CommentsList useEffect 2nd]", "color:#7b4bbb;");
     if (!loading && reqIdentifier === "ADD_COMMENT") {
-      setExtendedComments((oldCommentState) => [
-        ...oldCommentState,
-        data as IComment,
-      ]);
+      setExtendedComments((oldCommentState) => [...oldCommentState, data]);
     } else if (!loading && reqIdentifier === "DELETE_COMMENT") {
       setExtendedComments((oldCommentState) =>
         oldCommentState.filter((el) => el._id !== reqExtra)
@@ -62,7 +56,6 @@ const CommentsList = ({
 
   const addComment = (commentText: string) => {
     const commentPyload = { commentText, productId };
-
     sendRequest(
       "admin/comment",
       "post",

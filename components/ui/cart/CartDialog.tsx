@@ -26,17 +26,12 @@ import cartCtx from "../../../ctxStore/cartCtx";
 import { useHttp } from "../../../hooks/http";
 import { IProduct } from "../../../types/Product";
 
-const CartDialog = ({
-  dialogValue,
-  onShadowClick,
-  style,
-  productId,
-}: {
+const CartDialog: React.FC<{
   dialogValue: boolean;
   onShadowClick: () => void;
-  style: object;
+  style?: object;
   productId: string;
-}) => {
+}> = ({ dialogValue, onShadowClick, style, productId }) => {
   const [inputIconColor, setInputIconColor] = useState<"inherit" | "secondary">(
     "inherit"
   );
@@ -48,8 +43,7 @@ const CartDialog = ({
   const { setCart } = useContext(cartCtx);
 
   useEffect(() => {
-    if (data && Array.isArray(data)) {
-      console.log(data);
+    if (data) {
       let products: IProduct[] = [];
       let totalItems = 0;
       let totalPrice = 0;
@@ -63,9 +57,7 @@ const CartDialog = ({
   }, [data]);
   const dialogHeaderDir = theme.direction === "ltr" ? "row" : "row-reverse";
   const dialogBtnDir = theme.direction === "ltr" ? "row-reverse" : "row";
-  const toggleInputColor = (
-    e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const toggleInputColor = (e: FocusEvent<HTMLInputElement>) => {
     switch (e.type) {
       case "focus":
         setInputIconColor("secondary");
