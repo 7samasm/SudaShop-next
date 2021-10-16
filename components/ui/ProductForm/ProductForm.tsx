@@ -17,6 +17,7 @@ import {
   LinearProgress,
 } from "@material-ui/core";
 import { useRouter } from "next/router";
+import { useFormik } from "formik";
 
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import CustomDialog from "../CustomDialog/CustomDialog";
@@ -27,14 +28,10 @@ import ISection from "../../../types/Section";
 import IParams from "../../../types/extended/Params";
 import { IProduct } from "../../../types/Product";
 import { dialogReducer, initDialogState } from "./dialogReducer";
+import { inputs, validationSchema } from "./deps";
 
 const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
   const [section, setSection] = useState("");
-  const [imageUrl] = useState("d.jpg");
-
   const { sections } = useContext(sectionsCtx);
   const { token } = useContext(authCtx);
   const router = useRouter();
@@ -45,6 +42,17 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
   );
   const { data, sendRequest, loading, reqIdentifier, error } =
     useHttp<IProduct>();
+
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      description: "",
+      price: "",
+      imageUrl: "d.jpg",
+    },
+    validationSchema,
+    onSubmit() {},
+  });
 
   useEffect(() => {
     if (error) {
@@ -65,10 +73,13 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
       });
     } else if (data && reqIdentifier === "FETCH_PRODUCT") {
       const { title, description, price, section } = data;
-      setTitle(title);
-      setDescription(description);
+      formik.setValues({
+        title,
+        description,
+        price: price.toString(),
+        imageUrl: "d.jpg",
+      });
       setSection(section);
-      setPrice(price + "");
     }
   }, [data, reqIdentifier, error]);
 
@@ -93,12 +104,19 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
   const btnText = editable ? "Edit" : "Add";
   const colorTheme = editable ? "secondary" : "primary";
 
-  const clearFields = () => {
-    setTitle("");
-    setDescription("");
+  function isFeildsCompleted(): boolean {
+    return (
+      !!section &&
+      !!formik.values.title &&
+      !!formik.values.description &&
+      !!formik.values.price
+    );
+  }
+
+  function clearFields() {
+    formik.resetForm();
     setSection("");
-    setPrice("");
-  };
+  }
   const lastButtonClicked = () => {
     if (editable) {
       router.push("/admin/my-products");
@@ -112,14 +130,14 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
   };
   const sendForm = () => {
     interface IGrapedValues extends IProduct {
-      [k: string]: string | number | undefined;
+      [k: string]: any;
     }
     const grapedValues: IGrapedValues = {
-      title,
-      description,
+      title: formik.values.title,
+      description: formik.values.description,
+      imageUrl: formik.values.imageUrl,
+      price: +formik.values.price,
       section,
-      imageUrl,
-      price: +price,
     };
     let url = "admin/add-product";
     let method = "post";
@@ -139,15 +157,6 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
     sendRequest(url, method, formData, undefined, identifier, token!);
   };
 
-  const changeTitle = (
-    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => setTitle(e.target.value);
-  const changeDescription = (
-    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => setDescription(e.target.value);
-  const changePrice = (
-    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => setPrice(e.target.value);
   const changeSection = (e: ChangeEvent<any>, value: string) =>
     setSection(value);
 
@@ -165,22 +174,20 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
       {loading && <LinearProgress color={colorTheme} />}
       <Card>
         <CardContent>
-          <FormControl fullWidth>
-            <TextField
-              label="title"
-              value={title}
-              onChange={changeTitle}
-              color={colorTheme}
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <TextField
-              label="description"
-              onChange={changeDescription}
-              value={description}
-              color={colorTheme}
-            />
-          </FormControl>
+          {inputs.map(({ name, type, label }) => (
+            <FormControl fullWidth key={name}>
+              <TextField
+                id={name}
+                label={label}
+                type={type}
+                value={formik.values[name]}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched[name] && !!formik.errors[name]}
+                helperText={formik.touched[name] && formik.errors[name]}
+              />
+            </FormControl>
+          ))}
           <FormControl fullWidth>
             <Autocomplete
               value={section}
@@ -191,19 +198,11 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
               )}
             />
           </FormControl>
-          <FormControl fullWidth>
-            <TextField
-              label="price"
-              onChange={changePrice}
-              value={price}
-              color={colorTheme}
-              type="number"
-            />
-          </FormControl>
           <Button
             onClick={sendForm}
             color={colorTheme}
             variant="contained"
+            disabled={!formik.isValid || !isFeildsCompleted()}
             style={{ display: "Block", marginTop: "15px", color: "#fff" }}
           >
             {btnText}

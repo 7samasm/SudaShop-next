@@ -1,4 +1,7 @@
-import React, { useState, useContext, ChangeEvent } from "react";
+import React, { useState, useContext } from "react";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import capitalize from "lodash/capitalize";
 import {
   Card,
   CardContent,
@@ -9,65 +12,86 @@ import {
   LinearProgress,
 } from "@material-ui/core";
 
-import { useHttp } from "../../hooks/http";
 import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner";
 import CustomDialog from "../../components/ui/CustomDialog/CustomDialog";
 import authCtx from "../../ctxStore/authCtx";
 import cartCtx from "../../ctxStore/cartCtx";
 import { onLogin } from "./util/index.util";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const changeEmail = (e: ChangeEvent<HTMLInputElement>) =>
-    setEmail(e.target.value);
-  const changePassword = (e: ChangeEvent<HTMLInputElement>) =>
-    setPassword(e.target.value);
-  const [dialog, setDialog] = useState(false);
+const validationSchema = yup.object({
+  email: yup
+    .string()
+    .required("email is requierd")
+    .email("enter a valid email")
+    .max(40, "too long email"),
+  password: yup
+    .string()
+    .required("password is requierd")
+    .min(6, "password must be more than 6")
+    .max(40, "password must be less than too 40"),
+});
 
+const inputs: { name: "email" | "password"; type: string }[] = [
+  { name: "email", type: "text" },
+  { name: "password", type: "password" },
+];
+
+const Login = () => {
+  const [dialog, setDialog] = useState(false);
   const { authSuccess, startRefreshTokenTimer } = useContext(authCtx);
   const { getAndSetCart } = useContext(cartCtx);
-  // const [session] = useSession();
-  const { data, loading, error, sendRequest } = useHttp();
+
+  const formik = useFormik({
+    initialValues: { email: "", password: "" },
+    validationSchema,
+    onSubmit: () => {},
+  });
 
   const login = async () => {
     await onLogin(
-      email,
-      password,
+      formik.values.email,
+      formik.values.password,
       authSuccess,
       getAndSetCart,
       startRefreshTokenTimer
     );
   };
+
+  const isFieldsCompleted = !!formik.values.email && !!formik.values.password;
+
   return (
     <Grid container justifyContent="center">
-      <LoadingSpinner open={loading} renderLoader={false} />
+      <LoadingSpinner open={false} renderLoader={false} />
       <CustomDialog
         open={dialog}
         title="error"
-        text={error || "issue with user end point !"}
+        text={false || "issue with user end point !"}
         onLastButtonClicked={() => setDialog(false)}
         hideFirstButton={true}
       />
       <Grid item lg={4}>
-        {loading && <LinearProgress />}
+        {false && <LinearProgress />}
         <Card>
           <CardContent>
-            <FormControl fullWidth>
-              <TextField label="Email" onChange={changeEmail} value={email} />
-            </FormControl>
-            <FormControl fullWidth>
-              <TextField
-                label="Password"
-                onChange={changePassword}
-                value={password}
-                type="password"
-              />
-            </FormControl>
+            {inputs.map(({ name, type }) => (
+              <FormControl fullWidth key={name}>
+                <TextField
+                  id={name}
+                  label={capitalize(name)}
+                  type={type}
+                  value={formik.values[name]}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched[name] && !!formik.errors[name]}
+                  helperText={formik.touched[name] && formik.errors[name]}
+                />
+              </FormControl>
+            ))}
             <Button
               onClick={login}
               color="primary"
               variant="outlined"
+              disabled={!formik.isValid || !isFieldsCompleted}
               style={{ display: "Block", marginTop: "15px" }}
             >
               login
