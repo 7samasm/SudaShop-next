@@ -1,29 +1,28 @@
 import ICart from "../../../types/Cart";
 import { IProduct } from "../../../types/Product";
-
+/**
+ * @version 2.0.0
+ * @param cartProducts
+ * @param deletedId
+ * @returns ICart
+ */
 export function reCalculateCartDataForDeletion(
   cartProducts: IProduct[],
-  deletedId: string,
-  totalItems: number,
-  totalPrice: number
+  deletedId: string
 ) {
-  let data: ICart | null = null;
-  const deletedCartProduct = cartProducts.find(
-    (cartProduct) => cartProduct._id === deletedId
-  );
-  // console.log(`%c ${currItems}`, "color:teal;font-size:18px;");
-  if (deletedCartProduct) {
-    const filteredCartItems = cartProducts.filter(
-      (cartProduct) => cartProduct._id !== deletedId
-    );
-    const total = totalItems - deletedCartProduct.quantity!;
-    const calcTotalPrice =
-      totalPrice - deletedCartProduct.quantity! * deletedCartProduct.price;
-    data = {
-      products: filteredCartItems,
-      totalPrice: calcTotalPrice,
-      totalItems: total,
-    };
-  }
+  const data: ICart = {
+    products: [],
+    totalItems: 0,
+    totalPrice: 0,
+  };
+
+  cartProducts.forEach((cp) => {
+    if (cp._id !== deletedId) {
+      data.products?.push(cp);
+      data.totalItems += cp.quantity!;
+      data.totalPrice += cp.quantity! * cp.price;
+    }
+  });
+
   return data;
 }

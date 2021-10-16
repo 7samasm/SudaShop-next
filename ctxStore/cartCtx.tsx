@@ -3,7 +3,7 @@ import { createContext, FC, useReducer } from "react";
 import ICart from "../types/Cart";
 
 const initCart: ICart = {
-  products: null,
+  products: [],
   totalItems: 0,
   totalPrice: 0,
 };

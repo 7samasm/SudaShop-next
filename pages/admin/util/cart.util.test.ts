@@ -19,12 +19,7 @@ describe("<CART => util>", () => {
       totalItems: 6,
       totalPrice: 1400,
     };
-    const cartData = reCalculateCartDataForDeletion(
-      products,
-      "2",
-      totalItems,
-      totalPrice
-    );
+    const cartData = reCalculateCartDataForDeletion(products, "2");
     expect(cartData).toBeTruthy();
     expect(cartData).toEqual({
       products: products.filter((p) => p._id !== "2"),
