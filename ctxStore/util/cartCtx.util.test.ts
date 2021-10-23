@@ -1,8 +1,8 @@
-import ICart from "../../../types/Cart";
-import { IProduct } from "../../../types/Product";
-import { reCalculateCartDataForDeletion } from "./cart.uitl";
+import ICart from "../../types/Cart";
+import { IProduct } from "../../types/Product";
+import { reCalculateCartDataForDeletion } from "./cartCtx.util";
 
-describe("<CART => util>", () => {
+describe("Cart Context", () => {
   test("calculateCart data should work well", () => {
     const mapedProducts: IProduct[] = [1, 2, 3].map((num) => ({
       _id: num.toString(),

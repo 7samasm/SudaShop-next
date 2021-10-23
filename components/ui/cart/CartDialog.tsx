@@ -40,20 +40,10 @@ const CartDialog: React.FC<{
   const { data, sendRequest } =
     useHttp<[{ productId: IProduct; quantity: number }]>();
   const { token } = useContext(authCtx);
-  const { setCart } = useContext(cartCtx);
+  const { addCartItem } = useContext(cartCtx);
 
   useEffect(() => {
-    if (data) {
-      let products: IProduct[] = [];
-      let totalItems = 0;
-      let totalPrice = 0;
-      data.forEach((el) => {
-        products.push({ ...el.productId, quantity: el.quantity });
-        totalItems += el.quantity;
-        totalPrice += el.quantity * el.productId.price;
-      });
-      setCart({ products, totalItems, totalPrice });
-    }
+    if (data) addCartItem(data);
   }, [data]);
   const dialogHeaderDir = theme.direction === "ltr" ? "row" : "row-reverse";
   const dialogBtnDir = theme.direction === "ltr" ? "row-reverse" : "row";
@@ -128,7 +118,7 @@ const CartDialog: React.FC<{
               dir={theme.direction}
               variant="text"
               color="primary"
-              onClick={() => addItemToCart()}
+              onClick={addItemToCart}
             >
               <CheckCircleOutline />
               <span className="mx-1"></span> ok

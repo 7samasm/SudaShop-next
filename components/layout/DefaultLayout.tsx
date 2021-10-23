@@ -23,7 +23,7 @@ const theme = createTheme({
 export default function DefaultLayout(props: { children: JSX.Element }) {
   const { loadSections } = useContext(sectionsCtx);
   const { authSuccess, startRefreshTokenTimer } = useContext(authCtx);
-  const { getAndSetCart } = useContext(cartCtx);
+  const { loadCart } = useContext(cartCtx);
   async function onLayoutInit() {
     try {
       await loadSections();
@@ -38,7 +38,7 @@ export default function DefaultLayout(props: { children: JSX.Element }) {
           throw new Error(error);
         }
         authSuccess(accessToken, user.userId, user);
-        await getAndSetCart(accessToken);
+        await loadCart(accessToken);
         return startRefreshTokenTimer(accessToken);
       }
     } catch (error) {

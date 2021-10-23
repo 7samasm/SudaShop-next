@@ -1,5 +1,6 @@
-import ICart from "../../../types/Cart";
-import { IProduct } from "../../../types/Product";
+import ICart from "../../types/Cart";
+import { IProduct } from "../../types/Product";
+
 /**
  * @version 2.0.0
  * @param cartProducts

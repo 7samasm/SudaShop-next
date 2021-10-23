@@ -1,6 +1,8 @@
 import axiosBuilder from "../axios";
 import { createContext, FC, useReducer } from "react";
 import ICart from "../types/Cart";
+import { IProduct } from "../types/Product";
+import { reCalculateCartDataForDeletion } from "./util/cartCtx.util";
 
 const initCart: ICart = {
   products: [],
@@ -24,19 +26,23 @@ const reducer = (
 
 const cartCtx = createContext({
   ...initCart,
-  setCart(cartData: ICart) {},
-  async getAndSetCart(token: string) {},
+  async loadCart(token: string) {},
+  addCartItem(data: [{ productId: IProduct; quantity: number }]) {},
+  removeCartItem(id: string) {},
 });
 
+// <CartProvider>
 export const CartProvider: FC<{ children: JSX.Element }> = ({ children }) => {
   const [cartState, dispatch] = useReducer(reducer, initCart);
-  function setCart(cartData: ICart) {
+
+  function _setCart(cartData: ICart) {
     dispatch({ type: "SET_CART", cartData });
   }
-  async function getAndSetCart(token: string) {
+
+  async function loadCart(token: string) {
     try {
       const { data } = await axiosBuilder(token).get<ICart>("/admin/cart");
-      dispatch({ type: "SET_CART", cartData: data });
+      _setCart(data);
     } catch (error) {
       console.log(error);
       dispatch({
@@ -44,12 +50,45 @@ export const CartProvider: FC<{ children: JSX.Element }> = ({ children }) => {
       });
     }
   }
-  const ctx = {
-    ...cartState,
-    setCart,
-    getAndSetCart,
-  };
-  return <cartCtx.Provider value={ctx}>{children}</cartCtx.Provider>;
-};
 
+  function removeCartItem(id: string) {
+    const products = [...cartState.products];
+    if (products.length > 0) {
+      const cartData = reCalculateCartDataForDeletion(products, id);
+      _setCart(cartData);
+    }
+  }
+
+  function addCartItem(data: [{ productId: IProduct; quantity: number }]) {
+    const initalCart: ICart = {
+      products: [],
+      totalItems: 0,
+      totalPrice: 0,
+    };
+    for (let i = 0; i < data.length; i++) {
+      const el = data[i];
+      initalCart.products.push({
+        ...el.productId,
+        quantity: el.quantity,
+      });
+      initalCart.totalItems += el.quantity;
+      initalCart.totalPrice += el.quantity * el.productId.price;
+    }
+    _setCart(initalCart);
+  }
+
+  return (
+    <cartCtx.Provider
+      value={{
+        ...cartState,
+        loadCart,
+        addCartItem,
+        removeCartItem,
+      }}
+    >
+      {children}
+    </cartCtx.Provider>
+  );
+};
+//  <CartProvider/>
 export default cartCtx;

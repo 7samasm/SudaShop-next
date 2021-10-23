@@ -16,19 +16,16 @@ import { useHttp } from "../../hooks/http";
 import CartItem from "../../components/ui/cart/CartItem";
 import cartCtx from "../../ctxStore/cartCtx";
 import authCtx from "../../ctxStore/authCtx";
-import { reCalculateCartDataForDeletion } from "./util/cart.uitl";
 
 const Cart = () => {
   const { data, sendRequest, reqExtra, loading } = useHttp<string>();
-  const { totalPrice, totalItems, products, setCart } = useContext(cartCtx);
+  const { totalPrice, totalItems, products, removeCartItem } =
+    useContext(cartCtx);
   const { token } = useContext(authCtx);
 
   useEffect(() => {
-    if (data) {
-      const cartData = reCalculateCartDataForDeletion(products, reqExtra!);
-      products.length > 0 && setCart(cartData);
-    }
-  }, [data, reqExtra, setCart, reCalculateCartDataForDeletion, products]);
+    if (data) removeCartItem(reqExtra!);
+  }, [data, reqExtra]);
 
   const deleteCartItem = (productId: string) => {
     sendRequest(

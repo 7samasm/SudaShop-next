@@ -1,6 +1,8 @@
 FROM node:alpine
-COPY . /app
 WORKDIR /app
-EXPOSE 8080
+COPY package.json .
+RUN npm install --legacy-peer-deps
+COPY . .
+EXPOSE 3000
 CMD [ "npm", "run", "dev" ]
 
