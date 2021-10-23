@@ -146,7 +146,7 @@ export default function ProductOverView({
             <CartDialog
               dialogValue={dialogValue}
               onShadowClick={toggleDialogValue}
-              productId={postState._id as string}
+              product={postState}
             />
             <Grid container direction="column">
               <Grid item className="mb-2">

@@ -30,20 +30,20 @@ const CartDialog: React.FC<{
   dialogValue: boolean;
   onShadowClick: () => void;
   style?: object;
-  productId: string;
-}> = ({ dialogValue, onShadowClick, style, productId }) => {
+  product: IProduct;
+}> = ({ dialogValue, onShadowClick, style, product }) => {
   const [inputIconColor, setInputIconColor] = useState<"inherit" | "secondary">(
     "inherit"
   );
   const theme = useTheme();
   const quantityInput = useRef<any>("");
-  const { data, sendRequest } =
+  const { data, sendRequest, reqExtra } =
     useHttp<[{ productId: IProduct; quantity: number }]>();
   const { token } = useContext(authCtx);
   const { addCartItem } = useContext(cartCtx);
 
   useEffect(() => {
-    if (data) addCartItem(data);
+    if (data) addCartItem({ ...product, quantity: +reqExtra! });
   }, [data]);
   const dialogHeaderDir = theme.direction === "ltr" ? "row" : "row-reverse";
   const dialogBtnDir = theme.direction === "ltr" ? "row-reverse" : "row";
@@ -62,8 +62,8 @@ const CartDialog: React.FC<{
     sendRequest(
       "/admin/cart",
       "post",
-      { productId, quantity },
-      undefined,
+      { productId: product._id, quantity },
+      quantity,
       undefined,
       token!
     );

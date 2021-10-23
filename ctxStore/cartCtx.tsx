@@ -27,7 +27,7 @@ const reducer = (
 const cartCtx = createContext({
   ...initCart,
   async loadCart(token: string) {},
-  addCartItem(data: [{ productId: IProduct; quantity: number }]) {},
+  addCartItem(product: IProduct) {},
   removeCartItem(id: string) {},
 });
 
@@ -58,23 +58,30 @@ export const CartProvider: FC<{ children: JSX.Element }> = ({ children }) => {
       _setCart(cartData);
     }
   }
+  /**
+   * @version 2.0.0
+   * handle adding item to cart logic
+   * @param newProduct
+   */
+  function addCartItem(newProduct: IProduct) {
+    const copiedCartState = { ...cartState };
+    if (newProduct.quantity) {
+      copiedCartState.totalItems += newProduct.quantity;
+      copiedCartState.totalPrice += newProduct.quantity * newProduct.price;
 
-  function addCartItem(data: [{ productId: IProduct; quantity: number }]) {
-    const initalCart: ICart = {
-      products: [],
-      totalItems: 0,
-      totalPrice: 0,
-    };
-    for (let i = 0; i < data.length; i++) {
-      const el = data[i];
-      initalCart.products.push({
-        ...el.productId,
-        quantity: el.quantity,
-      });
-      initalCart.totalItems += el.quantity;
-      initalCart.totalPrice += el.quantity * el.productId.price;
+      const newProductIndex = cartState.products.findIndex(
+        (existProduct) => existProduct._id === newProduct._id
+      );
+      // new prod already in the cart
+      if (newProductIndex > -1) {
+        copiedCartState.products[newProductIndex].quantity! +=
+          newProduct.quantity;
+      } else {
+        copiedCartState.products.push(newProduct);
+      }
+      _setCart(copiedCartState);
     }
-    _setCart(initalCart);
+    // _setCart(initalCart);
   }
 
   return (
