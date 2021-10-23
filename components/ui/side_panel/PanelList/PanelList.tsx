@@ -3,6 +3,7 @@ import { Grid, Typography } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import PanelItem from "../PanelItem/PanelItem";
+import { IProduct } from "../../../../types/Product";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -15,33 +16,35 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const PanelList = React.memo((props: { title: string; productList: any[] }) => {
-  const { title, productList } = props;
+const PanelList = React.memo(
+  (props: { title: string; productList: IProduct[] }) => {
+    const { title, productList } = props;
 
-  const classes = useStyles();
-  const theme = useTheme();
-  const titleAlignment = theme.direction === "ltr" ? "left" : "right";
-  useEffect(() => {
-    console.log("%c [Panel list useEffect 1nd]", "color:teal;");
-  });
+    const classes = useStyles();
+    const theme = useTheme();
+    const titleAlignment = theme.direction === "ltr" ? "left" : "right";
+    useEffect(() => {
+      console.log("%c [Panel list useEffect 1nd]", "color:teal;");
+    });
 
-  const transformedProductList = productList.map(({ _id, title }) => (
-    <PanelItem title={title} id="60036d0b89a8bf0f76b5f2d3" key={_id} />
-  ));
+    const transformedProductList = productList.map(({ _id, title }) => (
+      <PanelItem title={title} id={_id!} key={_id} />
+    ));
 
-  return (
-    <Grid container direction="column" className={classes["mb-5"]}>
-      <Typography
-        className={classes["mb-2"]}
-        variant="body1"
-        color="secondary"
-        align={titleAlignment}
-      >
-        {title}
-      </Typography>
-      {transformedProductList}
-    </Grid>
-  );
-});
+    return (
+      <Grid container direction="column" className={classes["mb-5"]}>
+        <Typography
+          className={classes["mb-2"]}
+          variant="body1"
+          color="secondary"
+          align={titleAlignment}
+        >
+          {title}
+        </Typography>
+        {transformedProductList}
+      </Grid>
+    );
+  }
+);
 
 export default PanelList;

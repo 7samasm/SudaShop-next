@@ -7,6 +7,7 @@ import { DrawerProvider } from "../../ctxStore/drawerCtx";
 import sectionsCtx from "../../ctxStore/sectionsCtx";
 import authCtx from "../../ctxStore/authCtx";
 import cartCtx from "../../ctxStore/cartCtx";
+import { useProductContext } from "../../ctxStore/productCtx";
 
 const theme = createTheme({
   palette: {
@@ -24,9 +25,12 @@ export default function DefaultLayout(props: { children: JSX.Element }) {
   const { loadSections } = useContext(sectionsCtx);
   const { authSuccess, startRefreshTokenTimer } = useContext(authCtx);
   const { loadCart } = useContext(cartCtx);
+  const { loadMostCommonProducts, loadRelatedProducts } = useProductContext();
   async function onLayoutInit() {
     try {
       await loadSections();
+      await loadMostCommonProducts();
+      await loadRelatedProducts();
       const session = await getSession();
       if (session) {
         const { accessToken, user, error } = session as {

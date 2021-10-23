@@ -29,6 +29,7 @@ import IParams from "../../types/extended/Params";
 import { IProduct } from "../../types/Product";
 import IUser from "../../types/User";
 import { IComment } from "../../types/Comment";
+import { useProductContext } from "../../ctxStore/productCtx";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -69,6 +70,7 @@ export default function ProductOverView({
   const classes = useStyles();
   const [dialogValue, setDialogValue] = useState(false);
   const { isLoggedIn, userId } = useContext(authCtx);
+  const { mostCommonProducts, relatedProducts } = useProductContext();
   const InfoOnChips = () => {
     const mapDataOnChips = [
       { name: `${postState.price} SDG`, icon: Money },
@@ -112,22 +114,8 @@ export default function ProductOverView({
           md={5}
           className={classes.paddingCol + " " + classes.changeItemOrderOnMobile}
         >
-          <PanelList
-            title="see also"
-            productList={[
-              { _id: "1", title: "test" },
-              { _id: "2", title: "test1" },
-              { _id: "3", title: "test2" },
-            ]}
-          />
-          <PanelList
-            title="most comments"
-            productList={[
-              { _id: "1", title: "test" },
-              { _id: "2", title: "test1" },
-              { _id: "3", title: "test2" },
-            ]}
-          />
+          <PanelList title="see also" productList={relatedProducts} />
+          <PanelList title="most comments" productList={mostCommonProducts} />
         </Grid>
         {/* side panels end */}
         {/* post-comment  start */}
