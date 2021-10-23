@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import { ClearAll, Functions } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
+import CurrencyFormat from "react-currency-format";
 
 import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner";
 import { useHttp } from "../../hooks/http";
@@ -72,7 +73,13 @@ const Cart = () => {
                   <ListItemText>total</ListItemText>
                   <ListItemIcon>
                     <Typography component="p" variant="body1" color="primary">
-                      {totalPrice} SDG
+                      <CurrencyFormat
+                        value={totalPrice}
+                        thousandSeparator
+                        displayType="text"
+                        decimalScale={2}
+                        suffix=" SDG"
+                      />
                     </Typography>
                   </ListItemIcon>
                 </ListItem>

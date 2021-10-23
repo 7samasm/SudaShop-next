@@ -11,6 +11,7 @@ import {
   ListItemText,
   ListItemIcon,
 } from "@material-ui/core";
+import CurrencyFormat from "react-currency-format";
 
 import img from "../../../public/images/d.jpg";
 
@@ -32,7 +33,20 @@ const CartItem = ({
           <ListItemAvatar>
             <Avatar src={img.src}></Avatar>
           </ListItemAvatar>
-          <ListItemText secondary={`${price} SDG x ${quantity} pcs`}>
+          <ListItemText
+            secondary={
+              <>
+                <CurrencyFormat
+                  value={price}
+                  thousandSeparator
+                  displayType="text"
+                  decimalScale={2}
+                  suffix=" SDG"
+                />{" "}
+                x {quantity} pcs
+              </>
+            }
+          >
             {title}
           </ListItemText>
           <ListItemIcon>
