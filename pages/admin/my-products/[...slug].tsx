@@ -35,8 +35,13 @@ const MyProducts = () => {
       Array.isArray(router.query.slug)
     ) {
       const [_, sort, order, page] = router.query.slug;
+      /**
+       * if page (n) has only result after delete this result
+       * we push prev page (n - 1)
+       */
       if (pagination.docs.length === 1 && +page > 1) {
         router.push(`/admin/my-products/all/${sort}/${order}/${+page - 1}`);
+        // return prevent call of next sendRequest
         return;
       }
       sendRequest(

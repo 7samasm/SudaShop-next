@@ -39,7 +39,7 @@ const inputs: { name: "email" | "password"; type: string }[] = [
 const Login = () => {
   const [dialog, setDialog] = useState(false);
   const { authSuccess, startRefreshTokenTimer } = useContext(authCtx);
-  const { getAndSetCart } = useContext(cartCtx);
+  const { loadCart } = useContext(cartCtx);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
@@ -52,7 +52,7 @@ const Login = () => {
       formik.values.email,
       formik.values.password,
       authSuccess,
-      getAndSetCart,
+      loadCart,
       startRefreshTokenTimer
     );
   };
