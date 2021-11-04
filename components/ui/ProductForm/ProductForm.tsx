@@ -119,14 +119,14 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
   }
   const lastButtonClicked = () => {
     if (editable) {
-      router.push("/admin/my-products");
+      router.push("/admin/my-products/1");
       return;
     }
     clearFields();
     dialogDispatch({ type: "CLOSE", text: "" });
   };
   const firstButtonClicked = () => {
-    router.push("/admin/my-products");
+    router.push("/admin/my-products/1");
   };
   const sendForm = () => {
     interface IGrapedValues extends IProduct {

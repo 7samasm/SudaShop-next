@@ -78,7 +78,7 @@ const TemporaryDrawer = React.memo(() => {
     {
       title: "My Products",
       icon: WorkIcon,
-      link: "/admin/my-products",
+      link: "/admin/my-products/1",
       render: isLoggedIn,
     },
   ].map((listItem) => {

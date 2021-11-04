@@ -22,6 +22,7 @@ type TCLWSAPProps = {
   totalPages: number;
   onPaginationChange(e: ChangeEvent<any>, page: number): void;
   baseSortUrl: string;
+  render?: Function;
 };
 
 const CartListWithSettingsAndPagination: FC<TCLWSAPProps> = ({
@@ -30,6 +31,7 @@ const CartListWithSettingsAndPagination: FC<TCLWSAPProps> = ({
   totalPages,
   onPaginationChange,
   baseSortUrl,
+  render,
 }) => {
   const classes = useStyles();
   const router = useRouter();
@@ -39,7 +41,7 @@ const CartListWithSettingsAndPagination: FC<TCLWSAPProps> = ({
       {products.length > 0 && (
         <CardListSettings totalResult={totalResult} baseSortUrl={baseSortUrl} />
       )}
-      <CardList products={products} />
+      <CardList products={products} render={render} />
       {products.length > 0 && (
         <Pagination
           page={
