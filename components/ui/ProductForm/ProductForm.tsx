@@ -13,6 +13,7 @@ import {
   TextField,
   Button,
   Card,
+  CardHeader,
   CardContent,
   LinearProgress,
 } from "@material-ui/core";
@@ -172,7 +173,11 @@ const ProductForm: React.FC<{ editable?: boolean }> = ({ editable }) => {
         hideFirstButton={editable || error ? true : false}
       />
       {loading && <LinearProgress color={colorTheme} />}
-      <Card>
+      <Card style={{ marginTop: "40px" }}>
+        <CardHeader
+          title={editable ? "Edit Product" : "Add Product"}
+          style={{ textAlign: "center", color: "grey" }}
+        />
         <CardContent>
           {inputs.map(({ name, type, label }) => (
             <FormControl fullWidth key={name}>

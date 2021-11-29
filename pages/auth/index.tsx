@@ -16,7 +16,7 @@ import LoadingSpinner from "../../components/ui/LoadingSpinner/LoadingSpinner";
 import CustomDialog from "../../components/ui/CustomDialog/CustomDialog";
 import authCtx from "../../ctxStore/authCtx";
 import cartCtx from "../../ctxStore/cartCtx";
-import { onLogin } from "./util/index.util";
+import { onLogin } from "../../util/pages/auth";
 
 const validationSchema = yup.object({
   email: yup

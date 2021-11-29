@@ -59,7 +59,7 @@ const Comment = ({
             </Grid>
             <Grid item className={classes["mx-2"]}>
               <Typography variant="caption" component="span">
-                {comment.userId.name}
+                {typeof comment.userId !== 'string' ? comment.userId.name : ''}
               </Typography>
             </Grid>
             {/* spacer */}

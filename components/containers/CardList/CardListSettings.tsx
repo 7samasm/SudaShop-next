@@ -39,7 +39,7 @@ const CardListSettings: React.FC<{
   const classes = useStyles();
   useEffect(() => {
     console.log(router);
-    if (typeof router.query.slug === "object") {
+    if (Array.isArray(router.query.slug)) {
       const [selector, sort, order] = router.query.slug;
 
       /**

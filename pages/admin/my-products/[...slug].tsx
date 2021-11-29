@@ -22,11 +22,7 @@ const MyProducts = () => {
   const router = useRouter();
   const { token } = useContext(authCtx);
   useEffect(() => {
-    if (
-      data &&
-      (reqIdentifier === "FETCH_PRODUCTS" ||
-        reqIdentifier === "FETCH_PRODUCTS_AGAIN")
-    )
+    if (data && reqIdentifier && reqIdentifier !== "DEL_PRODUCT")
       setPagination(data);
     else if (
       data &&

@@ -1,4 +1,7 @@
 import axios from "axios";
+import getConfig from "next/config";
+
+const { publicRuntimeConfig } = getConfig();
 
 const headers: { [key: string]: string } = {
   "Access-Control-Allow-Origin": "*",
@@ -8,11 +11,12 @@ const headers: { [key: string]: string } = {
 };
 
 const axiosBuilder = (token?: string) => {
+  console.log(process.env.API_URL);
   if (token) {
     headers["Authorization"] = "bearer " + token;
   }
   return axios.create({
-    baseURL: "http://localhost:7878/hpi/",
+    baseURL: publicRuntimeConfig.backendUrl,
     headers: { ...headers },
   });
 };

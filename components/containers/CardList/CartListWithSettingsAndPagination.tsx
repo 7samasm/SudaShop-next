@@ -6,7 +6,7 @@ import { Pagination } from "@material-ui/lab";
 import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { IProduct } from "../../../types/Product";
-import { ChangeEvent, FC } from "react";
+import { ChangeEvent, FC, useCallback } from "react";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -25,6 +25,8 @@ type TCLWSAPProps = {
   render?: Function;
 };
 
+// const extractPageNumber =
+
 const CartListWithSettingsAndPagination: FC<TCLWSAPProps> = ({
   products,
   totalResult,
@@ -35,7 +37,17 @@ const CartListWithSettingsAndPagination: FC<TCLWSAPProps> = ({
 }) => {
   const classes = useStyles();
   const router = useRouter();
-  const slug = router.query?.slug;
+
+  const extractPageNumber = useCallback((): number => {
+    let num = 1;
+    const page = router.query.page;
+    const slug = router.query.slug;
+    if (typeof page === "string") num = +page;
+    // last element in slug[] is page
+    else if (Array.isArray(slug)) num = +slug[slug.length - 1];
+    return num;
+  }, [router]);
+
   return (
     <Grid container direction="column" alignItems="center">
       {products.length > 0 && (
@@ -44,15 +56,7 @@ const CartListWithSettingsAndPagination: FC<TCLWSAPProps> = ({
       <CardList products={products} render={render} />
       {products.length > 0 && (
         <Pagination
-          page={
-            parseInt(router.query.page + "") ||
-            /*
-             * if you use [...slug] so page param doesnt work
-             * insted u can use slug param which contain rest of param in slug property
-             * that store array of params => [sort,order,page]
-             */
-            parseInt(slug ? slug[slug.length - 1] : "1")
-          }
+          page={extractPageNumber()}
           count={totalPages}
           color="primary"
           className={classes["my-2"]}
